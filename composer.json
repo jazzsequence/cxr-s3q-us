@@ -71,8 +71,9 @@
         "roots/wp-password-bcrypt": "*",
         "vlucas/phpdotenv": "^5.5",
         "wpackagist-plugin/pantheon-advanced-page-cache": "*",
+        "wpackagist-plugin/safe-redirect-manager": "*",
         "wpackagist-plugin/wp-native-php-sessions": "*",
-        "wpackagist-theme/twentytwentyfive": "^1.0"
+        "wpackagist-theme/twentytwentyfive": "*"
     },
     "require-dev": {
         "pantheon-systems/pantheon-wp-coding-standards": "*",
