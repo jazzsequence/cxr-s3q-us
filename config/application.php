@@ -126,10 +126,29 @@ Config::define( 'WP_POST_REVISIONS', env( 'WP_POST_REVISIONS' ) ?? true );
 /**
  * Debugging Settings
  */
-Config::define( 'WP_DEBUG_DISPLAY', false );
-Config::define( 'WP_DEBUG_LOG', false );
-Config::define( 'SCRIPT_DEBUG', false );
-ini_set( 'display_errors', '0' );
+
+switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
+    case 'dev':
+        Config::define('WP_DEBUG', true);
+        Config::define('WP_DEBUG_LOG', true);
+        Config::define('WP_DEBUG_DISPLAY', true);
+        break;
+    case 'test':
+        Config::define('WP_DEBUG', true);
+        Config::define('WP_DEBUG_LOG', true);
+        Config::define('WP_DEBUG_DISPLAY', false);
+        break;
+    case 'live':
+        Config::define('WP_DEBUG', false);
+        Config::define('WP_DEBUG_LOG', false);
+        Config::define('WP_DEBUG_DISPLAY', false);
+        break;
+    default: // local or unset
+        Config::define('WP_DEBUG', true);
+        Config::define('WP_DEBUG_LOG', true);
+        Config::define('WP_DEBUG_DISPLAY', true);
+        break;
+}
 
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
