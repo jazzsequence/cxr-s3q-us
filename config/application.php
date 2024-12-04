@@ -153,7 +153,7 @@ switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
  * Object Cache Pro config
  */
 Config::define( 'WP_REDIS_CONFIG', [
-	'token' => getenv( 'OCP_LICENSE' ),
+	'token' => pantheon_get_secret( 'ocp_token' ),
 	'host' => getenv('CACHE_HOST') ?: '127.0.0.1',
 	'port' => getenv('CACHE_PORT') ?: 6379,
 	'database' => getenv('CACHE_DB') ?: 0,
