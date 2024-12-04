@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "97004858393cb0ab83dece2e1d507ffb",
+    "content-hash": "e34019e29d46c6432567c3347929c39e",
     "packages": [
         {
             "name": "composer/installers",
@@ -442,6 +442,46 @@
                 }
             ],
             "time": "2024-07-20T21:41:07+00:00"
+        },
+        {
+            "name": "rhubarbgroup/object-cache-pro",
+            "version": "v1.21.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://objectcache.pro/plugin/object-cache-pro-1.21.3.zip?token=dd9cc75fa72816fe69f8b3ccc7b8f68ab6043278921d52c3a7990c67aae3",
+                "reference": "2cf96e8726a30a61f1b2e722a4f21e5fa782d0e8"
+            },
+            "require": {
+                "composer/installers": "~1.0 || ~2.0",
+                "ext-redis": ">=3.1.1",
+                "php": "^7.2 || ^8.0"
+            },
+            "suggest": {
+                "ext-redis": "Required to use PhpRedis as the object cache backend.",
+                "ext-relay": "Required to use Relay as the object cache backend."
+            },
+            "type": "wordpress-plugin",
+            "autoload": {
+                "psr-4": {
+                    "RedisCachePro\\": "src/"
+                },
+                "classmap": [
+                    "src/Support/Types.php",
+                    "src/Extensions/Debugbar/Panel.php",
+                    "src/Extensions/Debugbar/Insights.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "A business class Redis object cache backend for WordPress.",
+            "homepage": "https://objectcache.pro",
+            "time": "2024-10-29T17:48:51+00:00"
         },
         {
             "name": "roots/bedrock-autoloader",
