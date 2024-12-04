@@ -126,7 +126,6 @@ Config::define( 'WP_POST_REVISIONS', env( 'WP_POST_REVISIONS' ) ?? true );
 /**
  * Debugging Settings
  */
-
 switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
     case 'dev':
         Config::define('WP_DEBUG', true);
@@ -149,6 +148,35 @@ switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
         Config::define('WP_DEBUG_DISPLAY', true);
         break;
 }
+
+/**
+ * Object Cache Pro config
+ */
+Config::define( 'WP_REDIS_CONFIG', [
+	'token' => getenv( 'OCP_LICENSE' ),
+	'host' => getenv('CACHE_HOST') ?: '127.0.0.1',
+	'port' => getenv('CACHE_PORT') ?: 6379,
+	'database' => getenv('CACHE_DB') ?: 0,
+	'password' => getenv('CACHE_PASSWORD') ?: null,
+	'maxttl' => 86400 * 7,
+	'timeout' => 0.5,
+	'read_timeout' => 0.5,
+	'split_alloptions' => true,
+	'prefetch' => true,
+	'debug' => false,
+	'save_commands' => false,
+	'analytics' => [
+		'enabled' => true,
+		'persist' => true,
+		'retention' => 3600, // 1 hour
+		'footnote' => true,
+	],
+	'prefix' => "ocppantheon", // This prefix can be changed. Setting a prefix helps avoid conflict when switching from other plugins like wp-redis.
+	'serializer' => 'igbinary',
+	'compression' => 'zstd',
+	'async_flush' => true,
+	'strict' => true,	
+] );
 
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
