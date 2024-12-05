@@ -22,12 +22,6 @@ function bootstrap() {
 	add_action( 'admin_post_add_favorite', __NAMESPACE__ . '\\add_favorite_redirect' );
 	add_action( 'admin_post_remove_favorite', __NAMESPACE__ . '\\remove_favorite_redirect' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_redirect_widget_script' );
-	add_action( 'admin_enqueue_scripts', function() {
-		wp_add_inline_style(
-			'dashboard',
-			'.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }'
-		);
-	});	
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
 	add_filter( 'post_row_actions', __NAMESPACE__ . '\\add_favorite_action_link', 10, 2 );
@@ -113,17 +107,22 @@ function render_redirect_dashboard_widget() {
 
 function render_redirect_item( $post_id ) {
     $redirect_from = get_post_meta( $post_id, '_redirect_rule_from', true );
-    $redirect_to   = get_post_meta( $post_id, '_redirect_rule_to', true );
+    $redirect_to = get_post_meta( $post_id, '_redirect_rule_to', true );
+    $is_sticky = is_sticky( $post_id );
 
     $full_url = home_url( $redirect_from );
+    $toggle_action = $is_sticky ? 'remove_favorite' : 'add_favorite';
+    $star_class = $is_sticky ? 'dashicons-star-filled' : 'dashicons-star-empty';
 
-    echo '<div style="margin-bottom: 1em;">';
+    echo '<div style="margin-bottom: 1em; display: flex; align-items: center;">';
+    echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '" style="cursor: pointer; margin-right: 10px;"></span>';
+    echo '<div>';
     echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
     echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '" style="width: 100%; padding: 5px;">';
     echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
     echo '</div>';
+    echo '</div>';
 }
-
 
 function render_redirect_list_dashboard_widget() {
     // Number of redirects to display per page
@@ -204,7 +203,10 @@ function redirect_list_widget_styles() {
         'dashboard',
         '.redirect-list-widget input { cursor: pointer; }
          .pagination a { text-decoration: none; padding: 3px 8px; background: #0073aa; color: #fff; border-radius: 3px; }
-         .pagination a.current { background: #333; }'
+         .pagination a.current { background: #333; }
+    	.favorite-toggle { font-size: 20px; color: #ffcc00; }
+     	.favorite-toggle:hover { color: #ff9900; }
+		.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }'
     );
 }
 
@@ -235,25 +237,25 @@ function get_favorite_toggle_url( $post_id, $make_sticky ) {
 function add_favorite_redirect() {
     check_admin_referer( 'favorite_action' );
 
-    $post_id = absint( $_GET['post_id'] );
+    $post_id = absint( $_POST['post_id'] );
     if ( current_user_can( 'edit_post', $post_id ) ) {
         stick_post( $post_id );
+        wp_send_json_success( [ 'message' => esc_html__( 'Post favorited.', 's3q-redirect-widget' ) ] );
     }
 
-    wp_redirect( admin_url( 'edit.php?post_type=redirect_rule' ) );
-    exit;
+    wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 's3q-redirect-widget' ) ] );
 }
 
 function remove_favorite_redirect() {
     check_admin_referer( 'favorite_action' );
 
-    $post_id = absint( $_GET['post_id'] );
+    $post_id = absint( $_POST['post_id'] );
     if ( current_user_can( 'edit_post', $post_id ) ) {
         unstick_post( $post_id );
+        wp_send_json_success( [ 'message' => esc_html__( 'Post unfavorited.', 's3q-redirect-widget' ) ] );
     }
 
-    wp_redirect( admin_url( 'edit.php?post_type=redirect_rule' ) );
-    exit;
+    wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 's3q-redirect-widget' ) ] );
 }
 
 function enqueue_redirect_widget_script() {
@@ -263,20 +265,57 @@ function enqueue_redirect_widget_script() {
         // Register a placeholder script to attach inline code to
         wp_register_script( 'redirect-widget-inline', '', [], false, true );
 
-        // Inline JavaScript to select text on click
-        wp_add_inline_script(
-            'redirect-widget-inline',
-            "
-            document.addEventListener('DOMContentLoaded', function () {
-                const textInputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
-                textInputs.forEach((input) => {
-                    input.addEventListener('click', function () {
-                        this.select();
-                    });
-                });
-            });
-            "
-        );
+        // Inline JavaScript to select text on click and toggle favorites.
+		wp_add_inline_script(
+			'redirect-widget-inline',
+			"
+			document.addEventListener('DOMContentLoaded', function () {
+				const textInputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
+				textInputs.forEach((input) => {
+					input.addEventListener('click', function () {
+						this.select();
+					});
+				});
+		
+				const favoriteToggles = document.querySelectorAll('.favorite-toggle');
+				favoriteToggles.forEach((toggle) => {
+					toggle.addEventListener('click', function () {
+						const postId = this.dataset.postId;
+						const action = this.dataset.action;
+						const icon = this;
+		
+						fetch(ajaxurl, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded',
+							},
+							body: new URLSearchParams({
+								action: action,
+								post_id: postId,
+								_wpnonce: '" . wp_create_nonce( 'favorite_action' ) . "'
+							})
+						})
+						.then(response => response.json())
+						.then(data => {
+							if (data.success) {
+								if (action === 'add_favorite') {
+									icon.classList.remove('dashicons-star-empty');
+									icon.classList.add('dashicons-star-filled');
+									icon.dataset.action = 'remove_favorite';
+								} else {
+									icon.classList.remove('dashicons-star-filled');
+									icon.classList.add('dashicons-star-empty');
+									icon.dataset.action = 'add_favorite';
+								}
+							} else {
+								console.error(data.message);
+							}
+						});
+					});
+				});
+			});
+			"
+		);		
 
         // Enqueue the script
         wp_enqueue_script( 'redirect-widget-inline' );
