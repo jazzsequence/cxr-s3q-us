@@ -117,7 +117,7 @@ function render_redirect_list_dashboard_widget() {
         'orderby' => 'date',
         'order' => 'DESC',
     ];
-    $redirect_query = new WP_Query( $query_args );
+    $redirect_query = new \WP_Query( $query_args );
 
     if ( $redirect_query->have_posts() ) {
         echo '<div class="redirect-list-widget">';
