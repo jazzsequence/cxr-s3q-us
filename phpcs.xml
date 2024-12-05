@@ -11,15 +11,21 @@
   <!-- Ignore WordPress and Composer dependencies -->
   <exclude-pattern>web/*.php</exclude-pattern>
   <exclude-pattern>web/wp</exclude-pattern>
-  <exclude-pattern>web/app/themes/twentytwentytwo/</exclude-pattern>
+  <exclude-pattern>web/app/themes/twentytwentyfive/</exclude-pattern>
   <exclude-pattern>vendor/</exclude-pattern>
 
   <!-- Start Pantheon addition: Ignore plugins and quicksilver scripts -->
   <exclude-pattern>web/app/mu-plugins/*</exclude-pattern>
   <!-- This line prevents all plugins from being linted. Remove this line if you want to lint plugins. -->
-  <exclude-pattern>web/app/plugins/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/object-cache-pro/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/pantheon-advanced-page-cache/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/query-monitor/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/safe-redirect-manager/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/wp-native-php-sessions/*</exclude-pattern>
+  <exclude-pattern>web/app/object-cache.php</exclude-pattern>
   <exclude-pattern>web/private/*</exclude-pattern>
   <exclude-pattern>upstream-configuration/*</exclude-pattern>
+  <exclude-pattern>config/application.*</exclude-pattern>
 
   <!-- Ignore sniffs against things that we explicitly want for Pantheon upstreams. -->
   <rule ref="Pantheon-WP">
