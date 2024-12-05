@@ -221,10 +221,11 @@ function redirect_list_widget_styles() {
 		}
 		.redirect-item .redirect-to {
 			grid-column: 1 / span 2; /* Full width below the row */
-			font-size: 14px;
+			font-size: 0.8em;
 			margin-top: 5px;
 		}	
-		.redirect-item .favorite-toggle:hover { color: #ff9900; }'
+		.redirect-item .favorite-toggle:hover { color: #ff9900; }
+		#redirect_list_dashboard_widget { padding-right: 20px; }'
 	);	
 }
 
