@@ -19,8 +19,11 @@ function bootstrap() {
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_dashboard_widget' );
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_list_dashboard_widget' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\redirect_list_widget_styles' );
+	add_action( 'admin_post_add_favorite', __NAMESPACE__ . '\\add_favorite_redirect' );
+	add_action( 'admin_post_remove_favorite', __NAMESPACE__ . '\\remove_favorite_redirect' );
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
+	add_filter( 'post_row_actions', __NAMESPACE__ . '\\add_favorite_action_link', 10, 2 );
 }
 
 function bump_max_redirects() {
@@ -101,6 +104,20 @@ function render_redirect_dashboard_widget() {
 <?php
 }
 
+function render_redirect_item( $post_id ) {
+    $redirect_from = get_post_meta( $post_id, '_redirect_rule_from', true );
+    $redirect_to   = get_post_meta( $post_id, '_redirect_rule_to', true );
+
+    $full_url = home_url( $redirect_from );
+
+    echo '<div style="margin-bottom: 1em;">';
+    echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
+    echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '" style="width: 100%; padding: 5px;">';
+    echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
+    echo '</div>';
+}
+
+
 function render_redirect_list_dashboard_widget() {
     // Number of redirects to display per page
     $redirects_per_page = 10;
@@ -108,34 +125,51 @@ function render_redirect_list_dashboard_widget() {
     // Current page
     $current_page = isset( $_GET['redirect_page'] ) ? absint( $_GET['redirect_page'] ) : 1;
 
-    // Query for the redirects
+    // Get sticky redirects
+    $sticky_redirects = get_option( 'sticky_posts', [] );
+
+    // Display sticky (favorited) redirects
+    if ( $sticky_redirects ) {
+        $sticky_query_args = [
+            'post_type' => 'redirect_rule',
+            'post__in' => $sticky_redirects,
+            'posts_per_page' => -1,
+            'orderby' => 'post__in',
+            'post_status' => 'publish',
+        ];
+
+        $sticky_query = new \WP_Query( $sticky_query_args );
+
+        if ( $sticky_query->have_posts() ) {
+            echo '<div class="favorited-redirects"><h4>' . esc_html__( 'Favorited Redirects', 's3q-redirect-widget' ) . '</h4>';
+            while ( $sticky_query->have_posts() ) {
+                $sticky_query->the_post();
+                render_redirect_item( get_the_ID() );
+            }
+            echo '</div>';
+            wp_reset_postdata();
+        }
+    }
+
+    // Query non-sticky redirects
     $query_args = [
         'post_type' => 'redirect_rule',
+        'post__not_in' => $sticky_redirects,
         'posts_per_page' => $redirects_per_page,
         'paged' => $current_page,
         'post_status' => 'publish',
         'orderby' => 'date',
         'order' => 'DESC',
     ];
+
     $redirect_query = new \WP_Query( $query_args );
 
     if ( $redirect_query->have_posts() ) {
         echo '<div class="redirect-list-widget">';
 
-        // List the redirects
         while ( $redirect_query->have_posts() ) {
             $redirect_query->the_post();
-
-            $redirect_from = get_post_meta( get_the_ID(), '_redirect_rule_from', true );
-            $redirect_to   = get_post_meta( get_the_ID(), '_redirect_rule_to', true );
-
-            $full_url = home_url( $redirect_from );
-
-            echo '<div style="margin-bottom: 1em;">';
-            echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
-            echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '" style="width: 100%; padding: 5px;">';
-            echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
-            echo '</div>';
+            render_redirect_item( get_the_ID() );
         }
 
         echo '</div>';
@@ -152,7 +186,6 @@ function render_redirect_list_dashboard_widget() {
             echo '</div>';
         }
 
-        // Reset post data
         wp_reset_postdata();
     } else {
         echo '<p>' . esc_html__( 'No redirects found.', 's3q-redirect-widget' ) . '</p>';
@@ -166,6 +199,54 @@ function redirect_list_widget_styles() {
          .pagination a { text-decoration: none; padding: 3px 8px; background: #0073aa; color: #fff; border-radius: 3px; }
          .pagination a.current { background: #333; }'
     );
+}
+
+function add_favorite_action_link( $actions, $post ) {
+    if ( 'redirect_rule' === $post->post_type ) {
+        $is_sticky = is_sticky( $post->ID );
+
+        $actions['favorite'] = $is_sticky
+            ? '<a href="' . esc_url( get_favorite_toggle_url( $post->ID, false ) ) . '">Unfavorite</a>'
+            : '<a href="' . esc_url( get_favorite_toggle_url( $post->ID, true ) ) . '">Favorite</a>';
+    }
+
+    return $actions;
+}
+
+function get_favorite_toggle_url( $post_id, $make_sticky ) {
+    $action = $make_sticky ? 'add_favorite' : 'remove_favorite';
+    return add_query_arg(
+        [
+            'post_id' => $post_id,
+            'action'  => $action,
+            '_wpnonce' => wp_create_nonce( 'favorite_action' ),
+        ],
+        admin_url( 'admin-post.php' )
+    );
+}
+
+function add_favorite_redirect() {
+    check_admin_referer( 'favorite_action' );
+
+    $post_id = absint( $_GET['post_id'] );
+    if ( current_user_can( 'edit_post', $post_id ) ) {
+        stick_post( $post_id );
+    }
+
+    wp_redirect( admin_url( 'edit.php?post_type=redirect_rule' ) );
+    exit;
+}
+
+function remove_favorite_redirect() {
+    check_admin_referer( 'favorite_action' );
+
+    $post_id = absint( $_GET['post_id'] );
+    if ( current_user_can( 'edit_post', $post_id ) ) {
+        unstick_post( $post_id );
+    }
+
+    wp_redirect( admin_url( 'edit.php?post_type=redirect_rule' ) );
+    exit;
 }
 
 // Make it so.
