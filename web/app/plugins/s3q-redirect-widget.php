@@ -21,6 +21,13 @@ function bootstrap() {
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\redirect_list_widget_styles' );
 	add_action( 'admin_post_add_favorite', __NAMESPACE__ . '\\add_favorite_redirect' );
 	add_action( 'admin_post_remove_favorite', __NAMESPACE__ . '\\remove_favorite_redirect' );
+	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_redirect_widget_script' );
+	add_action( 'admin_enqueue_scripts', function() {
+		wp_add_inline_style(
+			'dashboard',
+			'.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }'
+		);
+	});	
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
 	add_filter( 'post_row_actions', __NAMESPACE__ . '\\add_favorite_action_link', 10, 2 );
@@ -248,6 +255,34 @@ function remove_favorite_redirect() {
     wp_redirect( admin_url( 'edit.php?post_type=redirect_rule' ) );
     exit;
 }
+
+function enqueue_redirect_widget_script() {
+    // Check if we're on the dashboard
+    $current_screen = get_current_screen();
+    if ( $current_screen && 'dashboard' === $current_screen->base ) {
+        // Register a placeholder script to attach inline code to
+        wp_register_script( 'redirect-widget-inline', '', [], false, true );
+
+        // Inline JavaScript to select text on click
+        wp_add_inline_script(
+            'redirect-widget-inline',
+            "
+            document.addEventListener('DOMContentLoaded', function () {
+                const textInputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
+                textInputs.forEach((input) => {
+                    input.addEventListener('click', function () {
+                        this.select();
+                    });
+                });
+            });
+            "
+        );
+
+        // Enqueue the script
+        wp_enqueue_script( 'redirect-widget-inline' );
+    }
+}
+
 
 // Make it so.
 bootstrap();
