@@ -115,11 +115,11 @@ function render_redirect_item( $post_id ) {
     $toggle_action = $is_sticky ? 'remove_favorite' : 'add_favorite';
     $star_class = $is_sticky ? 'dashicons-star-filled' : 'dashicons-star-empty';
 
-    echo '<div style="margin-bottom: 1em; display: flex; align-items: center;">';
-    echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '" style="cursor: pointer; margin-right: 10px;"></span>';
+    echo '<div class="redirect-item">';
+    echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '"></span>';
     echo '<div>';
     echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
-    echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '" style="width: 100%; padding: 5px;">';
+    echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '">';
     echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
     echo '</div>';
     echo '</div>';
@@ -203,9 +203,18 @@ function redirect_list_widget_styles() {
         '.redirect-list-widget input { cursor: pointer; }
          .pagination a { text-decoration: none; padding: 3px 8px; background: #0073aa; color: #fff; border-radius: 3px; }
          .pagination a.current { background: #333; }
-    	.favorite-toggle { font-size: 20px; color: #ffcc00; position: relative; bottom: 20px; }
+    	.favorite-toggle { font-size: 20px; color: #ffcc00; cursor: pointer; }
      	.favorite-toggle:hover { color: #ff9900; }
-		.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }'
+		.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }
+		#redirect_list_dashboard_widget { padding-right: 20px; }
+		.redirect-item input { width: 100%; padding: 5px; }
+		.redirect-item {
+			display: grid;
+			grid-template-columns: auto 1fr;
+			align-items: center;
+			gap: 10px; /* Adjust spacing between the star and input */
+			margin-bottom: 1em;
+		}'
     );
 }
 
