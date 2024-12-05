@@ -25,6 +25,10 @@ function bootstrap() {
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
 	add_filter( 'post_row_actions', __NAMESPACE__ . '\\add_favorite_action_link', 10, 2 );
+	add_action( 'wp_ajax_test_ajax', function() {
+		wp_send_json_success( [ 'message' => 'AJAX is working!' ] );
+	});
+	
 }
 
 function bump_max_redirects() {
@@ -314,6 +318,13 @@ function enqueue_redirect_widget_script() {
 					});
 				});
 			});
+			fetch(ajaxurl, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: new URLSearchParams({ action: 'test_ajax' })
+			})
+			.then(response => response.json())
+			.then(data => console.log(data));
 			"
 		);		
 
