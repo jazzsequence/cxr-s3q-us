@@ -144,7 +144,11 @@
         "lint:phpcbf": ["vendor/bin/phpcbf ."],
         "lint:bash": ["shellcheck private/scripts/*.sh"],
         "test": [],
-        "post-update-cmd": ["WordPressComposerManaged\\ComposerScripts::postUpdate"]
+        "post-update-cmd": ["WordPressComposerManaged\\ComposerScripts::postUpdate"],
+        "deploy": [
+            "terminus deploy cxr-s3q-us.test",
+            "terminus deploy cxr-s3q-us.live"
+        ]
     },
     "suggest": {
         "pantheon-systems/upstream-management": "Composer plugin that provides commands for managing custom upstreams on Pantheon."
