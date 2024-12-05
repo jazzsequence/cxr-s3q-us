@@ -77,6 +77,7 @@
         "vlucas/phpdotenv": "^5.5",
         "wpackagist-plugin/debug-bar": "*",
         "wpackagist-plugin/pantheon-advanced-page-cache": "*",
+        "wpackagist-plugin/query-monitor": "*",
         "wpackagist-plugin/safe-redirect-manager": "*",
         "wpackagist-plugin/wp-native-php-sessions": "*",
         "wpackagist-theme/twentytwentyfive": "*"
