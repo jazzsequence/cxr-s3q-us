@@ -78,3 +78,6 @@ function render_redirect_dashboard_widget() {
 	</form>
 <?php
 }
+
+// Make it so.
+bootstrap();
