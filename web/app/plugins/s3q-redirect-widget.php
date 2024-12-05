@@ -20,10 +20,18 @@ function bootstrap() {
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_list_dashboard_widget' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\redirect_list_widget_styles' );
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
+	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
 }
 
 function bump_max_redirects() {
 	return 9999;
+}
+
+function enable_sticky_support_for_redirect_rule( $supports, $post_type ) {
+    if ( 'redirect_rule' === $post_type ) {
+        $supports[] = 'sticky';
+    }
+    return $supports;
 }
 
 function add_redirect_dashboard_widget() {
