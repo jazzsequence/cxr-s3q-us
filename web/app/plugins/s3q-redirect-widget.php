@@ -222,7 +222,7 @@ function redirect_list_widget_styles() {
 		}
 		.redirect-item .redirect-to {
 			grid-column: 1 / span 2; /* Full width below the row */
-			font-size: 0.8em;
+			font-size: 0.9em;
 			margin-top: 5px;
 		}	
 		.redirect-item .favorite-toggle:hover { color: #ff9900; }
@@ -304,28 +304,30 @@ function enqueue_redirect_widget_script() {
             'redirect-widget-inline',
             "
 			document.addEventListener('DOMContentLoaded', function () {
-				// Select all input elements (favorited and non-favorited) initially
-				const attachInputListeners = () => {
-					const inputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
-					inputs.forEach(input => {
-						input.removeEventListener('click', handleInputClick); // Avoid duplicate listeners
-						input.addEventListener('click', handleInputClick);
-					});
-				};
-
+				// Function to select text in input
 				const handleInputClick = (event) => {
 					event.target.select();
 				};
 
-				// Attach listeners on DOM load
+				// Attach listeners to all input fields in the widget
+				const attachInputListeners = () => {
+					const inputs = document.querySelectorAll('.redirect-item input');
+					inputs.forEach((input) => {
+						input.removeEventListener('click', handleInputClick); // Prevent duplicate listeners
+						input.addEventListener('click', handleInputClick);
+					});
+				};
+
+				// Initial attachment of listeners
 				attachInputListeners();
 
-				// Handle favorite toggle
+				// Handle favorite toggle dynamically
 				const container = document.querySelector('.redirect-list-widget, .favorited-redirects');
 				if (container) {
 					container.addEventListener('click', function (event) {
 						const target = event.target;
 
+						// Handle favorite toggle
 						if (target.classList.contains('favorite-toggle')) {
 							const postId = target.dataset.postId;
 							const action = target.dataset.action;
@@ -339,11 +341,11 @@ function enqueue_redirect_widget_script() {
 								body: new URLSearchParams({
 									action: action,
 									post_id: postId,
-									_wpnonce: s3qRedirectWidget.nonce
-								})
+									_wpnonce: s3qRedirectWidget.nonce,
+								}),
 							})
-							.then(response => response.json())
-							.then(data => {
+							.then((response) => response.json())
+							.then((data) => {
 								if (data.success) {
 									if (action === 'add_favorite') {
 										icon.classList.remove('dashicons-star-empty');
@@ -355,12 +357,13 @@ function enqueue_redirect_widget_script() {
 										icon.dataset.action = 'add_favorite';
 									}
 
-									// Re-attach input listeners since DOM has changed
+									// Reattach listeners to ensure input selection works for moved items
 									attachInputListeners();
 								} else {
 									console.error(data.message);
 								}
-							});
+							})
+							.catch((error) => console.error('AJAX error:', error));
 						}
 					});
 				}
