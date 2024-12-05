@@ -209,7 +209,7 @@ function redirect_list_widget_styles() {
 			grid-row: 1 / span 1; /* Star icon stays in the top-left */
 			align-self: center;
 			font-size: 20px;
-			color: #ffcc00;
+			color: #2271b1;
 			cursor: pointer;
 		}
 		.redirect-item input {
@@ -225,7 +225,7 @@ function redirect_list_widget_styles() {
 			font-size: 0.9em;
 			margin-top: 5px;
 		}	
-		.redirect-item .favorite-toggle:hover { color: #ff9900; }
+		.redirect-item .favorite-toggle:hover { color: #135e96; }
 		#redirect_list_dashboard_widget { padding-right: 20px; }'
 	);	
 }
