@@ -148,7 +148,6 @@ function render_redirect_list_dashboard_widget() {
         $sticky_query = new \WP_Query( $sticky_query_args );
 
         if ( $sticky_query->have_posts() ) {
-            echo '<div class="favorited-redirects"><h4>' . esc_html__( 'Favorited Redirects', 's3q-redirect-widget' ) . '</h4>';
             while ( $sticky_query->have_posts() ) {
                 $sticky_query->the_post();
                 render_redirect_item( get_the_ID() );
