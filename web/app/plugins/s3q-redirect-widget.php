@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: s3q.us Redirect Widget
  * Description: Adds a WordPress admin dashboard widget for creating redirects using Safe Redirect Manager.
