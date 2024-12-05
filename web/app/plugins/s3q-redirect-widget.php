@@ -10,20 +10,18 @@
  */
 
 // Prevent direct access to the file
-if (! defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function bootstrap()
-{
-	add_action('wp_dashboard_setup', 'add_redirect_dashboard_widget');
+function bootstrap() {
+	add_action( 'wp_dashboard_setup', 'add_redirect_dashboard_widget' );
 }
 
-function add_redirect_dashboard_widget()
-{
+function add_redirect_dashboard_widget() {
 	wp_add_dashboard_widget(
-		'redirect_dashboard_widget',
-		__('Quick Redirect Manager', 's3q-redirect-widget'),
+		'redirect_dashboard_widget', 
+		__( 's3q Custom Link', 's3q-redirect-widget' ),
 		'render_redirect_dashboard_widget'
 	);
 }
