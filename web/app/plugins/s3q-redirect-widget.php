@@ -218,6 +218,7 @@ function redirect_list_widget_styles() {
 			width: 100%;
 			box-sizing: border-box; /* Consistent box model */
 			height: 40px; /* Uniform height for all inputs */
+			cursor: pointer;
 		}
 		.redirect-item .redirect-to {
 			grid-column: 1 / span 2; /* Full width below the row */
@@ -303,19 +304,28 @@ function enqueue_redirect_widget_script() {
             'redirect-widget-inline',
             "
 			document.addEventListener('DOMContentLoaded', function () {
-				// Handle click events for both favorited and non-favorited inputs
-				const container = document.querySelector('.redirect-list-widget, .favorited-redirects');
+				// Select all input elements (favorited and non-favorited) initially
+				const attachInputListeners = () => {
+					const inputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
+					inputs.forEach(input => {
+						input.removeEventListener('click', handleInputClick); // Avoid duplicate listeners
+						input.addEventListener('click', handleInputClick);
+					});
+				};
 
+				const handleInputClick = (event) => {
+					event.target.select();
+				};
+
+				// Attach listeners on DOM load
+				attachInputListeners();
+
+				// Handle favorite toggle
+				const container = document.querySelector('.redirect-list-widget, .favorited-redirects');
 				if (container) {
 					container.addEventListener('click', function (event) {
 						const target = event.target;
 
-						// Select input text when input box is clicked
-						if (target.tagName === 'INPUT') {
-							target.select();
-						}
-
-						// Toggle favorites when the star icon is clicked
 						if (target.classList.contains('favorite-toggle')) {
 							const postId = target.dataset.postId;
 							const action = target.dataset.action;
@@ -344,6 +354,9 @@ function enqueue_redirect_widget_script() {
 										icon.classList.add('dashicons-star-empty');
 										icon.dataset.action = 'add_favorite';
 									}
+
+									// Re-attach input listeners since DOM has changed
+									attachInputListeners();
 								} else {
 									console.error(data.message);
 								}
