@@ -117,9 +117,8 @@ function render_redirect_item( $post_id ) {
 
     echo '<div class="redirect-item">';
     echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '"></span>';
-    echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
     echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '">';
-    echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
+    echo '<div class="redirect-to"><strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a></div>';
     echo '</div>';
 }
 
@@ -303,18 +302,19 @@ function enqueue_redirect_widget_script() {
             'redirect-widget-inline',
             "
 			document.addEventListener('DOMContentLoaded', function () {
+				// Handle click events for both favorited and non-favorited inputs
 				const container = document.querySelector('.redirect-list-widget, .favorited-redirects');
 
 				if (container) {
 					container.addEventListener('click', function (event) {
 						const target = event.target;
 
-						// Handle input selection
+						// Select input text when input box is clicked
 						if (target.tagName === 'INPUT') {
 							target.select();
 						}
 
-						// Handle favorite toggles
+						// Toggle favorites when the star icon is clicked
 						if (target.classList.contains('favorite-toggle')) {
 							const postId = target.dataset.postId;
 							const action = target.dataset.action;
