@@ -205,7 +205,7 @@ function redirect_list_widget_styles() {
         '.redirect-list-widget input { cursor: pointer; }
          .pagination a { text-decoration: none; padding: 3px 8px; background: #0073aa; color: #fff; border-radius: 3px; }
          .pagination a.current { background: #333; }
-    	.favorite-toggle { font-size: 20px; color: #ffcc00; position: relative: bottom: 20px; }
+    	.favorite-toggle { font-size: 20px; color: #ffcc00; position: relative; bottom: 20px; }
      	.favorite-toggle:hover { color: #ff9900; }
 		.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }'
     );
