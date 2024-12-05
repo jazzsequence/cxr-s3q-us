@@ -117,11 +117,9 @@ function render_redirect_item( $post_id ) {
 
     echo '<div class="redirect-item">';
     echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '"></span>';
-    echo '<div>';
     echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
     echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '">';
     echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
-    echo '</div>';
     echo '</div>';
 }
 
@@ -301,64 +299,53 @@ function enqueue_redirect_widget_script() {
             'redirect-widget-inline',
             "
 			document.addEventListener('DOMContentLoaded', function () {
-				const widgetContainer = document.querySelector('.redirect-list-widget');
-				const favoritedContainer = document.querySelector('.favorited-redirects');
+				const container = document.querySelector('.redirect-list-widget, .favorited-redirects');
 
-				// Handle selection of short URLs
-				[widgetContainer, favoritedContainer].forEach(container => {
-					if (container) {
-						container.addEventListener('click', function (event) {
-							if (event.target.tagName === 'INPUT') {
-								event.target.select();
-							}
-						});
-					}
-				});
+				if (container) {
+					container.addEventListener('click', function (event) {
+						const target = event.target;
 
-				// Handle favoriting functionality
-				const handleFavoriteToggle = function (icon) {
-					const postId = icon.dataset.postId;
-					const action = icon.dataset.action;
+						// Handle input selection
+						if (target.tagName === 'INPUT') {
+							target.select();
+						}
 
-					fetch(s3qRedirectWidget.ajaxurl, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: new URLSearchParams({
-							action: action,
-							post_id: postId,
-							_wpnonce: s3qRedirectWidget.nonce
-						})
-					})
-					.then(response => response.json())
-					.then(data => {
-						if (data.success) {
-							if (action === 'add_favorite') {
-								icon.classList.remove('dashicons-star-empty');
-								icon.classList.add('dashicons-star-filled');
-								icon.dataset.action = 'remove_favorite';
-							} else {
-								icon.classList.remove('dashicons-star-filled');
-								icon.classList.add('dashicons-star-empty');
-								icon.dataset.action = 'add_favorite';
-							}
-						} else {
-							console.error(data.message);
+						// Handle favorite toggles
+						if (target.classList.contains('favorite-toggle')) {
+							const postId = target.dataset.postId;
+							const action = target.dataset.action;
+							const icon = target;
+
+							fetch(s3qRedirectWidget.ajaxurl, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded',
+								},
+								body: new URLSearchParams({
+									action: action,
+									post_id: postId,
+									_wpnonce: s3qRedirectWidget.nonce
+								})
+							})
+							.then(response => response.json())
+							.then(data => {
+								if (data.success) {
+									if (action === 'add_favorite') {
+										icon.classList.remove('dashicons-star-empty');
+										icon.classList.add('dashicons-star-filled');
+										icon.dataset.action = 'remove_favorite';
+									} else {
+										icon.classList.remove('dashicons-star-filled');
+										icon.classList.add('dashicons-star-empty');
+										icon.dataset.action = 'add_favorite';
+									}
+								} else {
+									console.error(data.message);
+								}
+							});
 						}
 					});
-				};
-
-				// Attach event listener to all toggle icons
-				[widgetContainer, favoritedContainer].forEach(container => {
-					if (container) {
-						container.addEventListener('click', function (event) {
-							if (event.target.classList.contains('favorite-toggle')) {
-								handleFavoriteToggle(event.target);
-							}
-						});
-					}
-				});
+				}
 			});
             "
         );
