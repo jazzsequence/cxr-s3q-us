@@ -130,7 +130,7 @@ switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
     case 'dev':
         Config::define('WP_DEBUG', true);
         Config::define('WP_DEBUG_LOG', true);
-        Config::define('WP_DEBUG_DISPLAY', true);
+        Config::define('WP_DEBUG_DISPLAY', false); // Keep this at false until test/live environments work.
         break;
     case 'test':
         Config::define('WP_DEBUG', true);
