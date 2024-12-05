@@ -269,64 +269,67 @@ function enqueue_redirect_widget_script() {
         // Register a placeholder script to attach inline code to
         wp_register_script( 'redirect-widget-inline', '', [], false, true );
 
+        // Localize script variables
+        wp_localize_script(
+            'redirect-widget-inline',
+            's3qRedirectWidget',
+            [
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'favorite_action' ),
+            ]
+        );
+
         // Inline JavaScript to select text on click and toggle favorites.
-		wp_add_inline_script(
-			'redirect-widget-inline',
-			"
-			document.addEventListener('DOMContentLoaded', function () {
-				const textInputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
-				textInputs.forEach((input) => {
-					input.addEventListener('click', function () {
-						this.select();
-					});
-				});
-		
-				const favoriteToggles = document.querySelectorAll('.favorite-toggle');
-				favoriteToggles.forEach((toggle) => {
-					toggle.addEventListener('click', function () {
-						const postId = this.dataset.postId;
-						const action = this.dataset.action;
-						const icon = this;
-		
-						fetch(ajaxurl, {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/x-www-form-urlencoded',
-							},
-							body: new URLSearchParams({
-								action: action,
-								post_id: postId,
-								_wpnonce: '" . wp_create_nonce( 'favorite_action' ) . "'
-							})
-						})
-						.then(response => response.json())
-						.then(data => {
-							if (data.success) {
-								if (action === 'add_favorite') {
-									icon.classList.remove('dashicons-star-empty');
-									icon.classList.add('dashicons-star-filled');
-									icon.dataset.action = 'remove_favorite';
-								} else {
-									icon.classList.remove('dashicons-star-filled');
-									icon.classList.add('dashicons-star-empty');
-									icon.dataset.action = 'add_favorite';
-								}
-							} else {
-								console.error(data.message);
-							}
-						});
-					});
-				});
-			});
-			fetch(ajaxurl, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				body: new URLSearchParams({ action: 'test_ajax' })
-			})
-			.then(response => response.json())
-			.then(data => console.log(data));
-			"
-		);		
+        wp_add_inline_script(
+            'redirect-widget-inline',
+            "
+            document.addEventListener('DOMContentLoaded', function () {
+                const textInputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
+                textInputs.forEach((input) => {
+                    input.addEventListener('click', function () {
+                        this.select();
+                    });
+                });
+
+                const favoriteToggles = document.querySelectorAll('.favorite-toggle');
+                favoriteToggles.forEach((toggle) => {
+                    toggle.addEventListener('click', function () {
+                        const postId = this.dataset.postId;
+                        const action = this.dataset.action;
+                        const icon = this;
+
+                        fetch(s3qRedirectWidget.ajaxurl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                action: action,
+                                post_id: postId,
+                                _wpnonce: s3qRedirectWidget.nonce
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                if (action === 'add_favorite') {
+                                    icon.classList.remove('dashicons-star-empty');
+                                    icon.classList.add('dashicons-star-filled');
+                                    icon.dataset.action = 'remove_favorite';
+                                } else {
+                                    icon.classList.remove('dashicons-star-filled');
+                                    icon.classList.add('dashicons-star-empty');
+                                    icon.dataset.action = 'add_favorite';
+                                }
+                            } else {
+                                console.error(data.message);
+                            }
+                        });
+                    });
+                });
+            });
+            "
+        );		
 
         // Enqueue the script
         wp_enqueue_script( 'redirect-widget-inline' );
