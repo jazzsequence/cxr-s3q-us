@@ -19,8 +19,8 @@ function bootstrap() {
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_dashboard_widget' );
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_list_dashboard_widget' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\redirect_list_widget_styles' );
-	add_action( 'admin_post_add_favorite', __NAMESPACE__ . '\\add_favorite_redirect' );
-	add_action( 'admin_post_remove_favorite', __NAMESPACE__ . '\\remove_favorite_redirect' );
+	add_action( 'wp_ajax_add_favorite', __NAMESPACE__ . '\\add_favorite_redirect' );
+	add_action( 'wp_ajax_remove_favorite', __NAMESPACE__ . '\\remove_favorite_redirect' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_redirect_widget_script' );
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
@@ -236,27 +236,31 @@ function get_favorite_toggle_url( $post_id, $make_sticky ) {
 }
 
 function add_favorite_redirect() {
-    check_admin_referer( 'favorite_action' );
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
+        wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
+    }
 
     $post_id = absint( $_POST['post_id'] );
     if ( current_user_can( 'edit_post', $post_id ) ) {
         stick_post( $post_id );
-        wp_send_json_success( [ 'message' => esc_html__( 'Post favorited.', 's3q-redirect-widget' ) ] );
+        wp_send_json_success( [ 'message' => 'Post favorited.' ] );
+    } else {
+        wp_send_json_error( [ 'message' => 'Permission denied.' ] );
     }
-
-    wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 's3q-redirect-widget' ) ] );
 }
 
 function remove_favorite_redirect() {
-    check_admin_referer( 'favorite_action' );
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
+        wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
+    }
 
     $post_id = absint( $_POST['post_id'] );
     if ( current_user_can( 'edit_post', $post_id ) ) {
         unstick_post( $post_id );
-        wp_send_json_success( [ 'message' => esc_html__( 'Post unfavorited.', 's3q-redirect-widget' ) ] );
+        wp_send_json_success( [ 'message' => 'Post unfavorited.' ] );
+    } else {
+        wp_send_json_error( [ 'message' => 'Permission denied.' ] );
     }
-
-    wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 's3q-redirect-widget' ) ] );
 }
 
 function enqueue_redirect_widget_script() {
@@ -295,17 +299,17 @@ function enqueue_redirect_widget_script() {
                         const action = this.dataset.action;
                         const icon = this;
 
-                        fetch(s3qRedirectWidget.ajaxurl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: new URLSearchParams({
-                                action: action,
-                                post_id: postId,
-                                _wpnonce: s3qRedirectWidget.nonce
-                            })
-                        })
+						fetch(s3qRedirectWidget.ajaxurl, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded',
+							},
+							body: new URLSearchParams({
+								action: action,
+								post_id: postId,
+								_wpnonce: s3qRedirectWidget.nonce
+							})
+						})
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
@@ -326,13 +330,12 @@ function enqueue_redirect_widget_script() {
                 });
             });
             "
-        );		
+        );
 
         // Enqueue the script
         wp_enqueue_script( 'redirect-widget-inline' );
     }
 }
-
 
 // Make it so.
 bootstrap();
