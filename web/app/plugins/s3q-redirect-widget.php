@@ -122,6 +122,7 @@ function render_redirect_item( $post_id ) {
     echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '" style="width: 100%; padding: 5px;">';
     echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
     echo '</div>';
+    echo '</div>';
 }
 
 function render_redirect_list_dashboard_widget() {
@@ -151,7 +152,6 @@ function render_redirect_list_dashboard_widget() {
                 $sticky_query->the_post();
                 render_redirect_item( get_the_ID() );
             }
-            echo '</div>';
             wp_reset_postdata();
         }
     }
