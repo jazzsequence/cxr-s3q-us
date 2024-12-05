@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a08d77066c9f8995174c8efa6687ed84",
+    "content-hash": "16e756e38dfc7985d72abeaa554ab567",
     "packages": [
         {
             "name": "composer/installers",
@@ -316,6 +316,51 @@
                 "source": "https://github.com/oscarotero/env/tree/v2.1.1"
             },
             "time": "2024-12-03T01:02:28+00:00"
+        },
+        {
+            "name": "pantheon-systems/pantheon-hud",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pantheon-systems/pantheon-hud.git",
+                "reference": "1c4c2be9a7ae3255127b88667105c25d1204cff1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pantheon-systems/pantheon-hud/zipball/1c4c2be9a7ae3255127b88667105c25d1204cff1",
+                "reference": "1c4c2be9a7ae3255127b88667105c25d1204cff1",
+                "shasum": ""
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
+                "pantheon-systems/pantheon-wordpress-upstream-tests": "dev-master",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^9",
+                "symfony/yaml": "^5.4 || ^6",
+                "wp-coding-standards/wpcs": "dev-develop as 2.3.1",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Pantheon",
+                    "email": "noreply@pantheon.io"
+                },
+                {
+                    "name": "Daniel Bachhuber",
+                    "email": "daniel@handbuilt.co"
+                }
+            ],
+            "description": "Provide situational awareness of the Pantheon platform from within your WordPress dashboard.",
+            "support": {
+                "issues": "https://github.com/pantheon-systems/pantheon-hud/issues",
+                "source": "https://github.com/pantheon-systems/pantheon-hud/tree/0.4.3"
+            },
+            "time": "2023-04-06T21:02:55+00:00"
         },
         {
             "name": "pantheon-systems/pantheon-mu-plugin",

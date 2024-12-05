@@ -66,6 +66,7 @@
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
         "oscarotero/env": "^2.1",
+        "pantheon-systems/pantheon-hud": "^0.4.3",
         "pantheon-systems/pantheon-mu-plugin": "*",
         "pantheon-upstreams/upstream-configuration": "dev-main",
         "rhubarbgroup/object-cache-pro": "*",
