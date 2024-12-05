@@ -9,13 +9,20 @@
  * License: MIT
  */
 
+namespace s3q\Redirects;
+
 // Prevent direct access to the file
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 function bootstrap() {
-	add_action( 'wp_dashboard_setup', 'add_redirect_dashboard_widget' );
+	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_dashboard_widget' );
+	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
+}
+
+function bump_max_redirects() {
+	return 9999;
 }
 
 function add_redirect_dashboard_widget() {
