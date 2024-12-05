@@ -75,6 +75,7 @@
         "roots/wp-config": "*",
         "roots/wp-password-bcrypt": "*",
         "vlucas/phpdotenv": "^5.5",
+        "wpackagist-plugin/debug-bar": "*",
         "wpackagist-plugin/pantheon-advanced-page-cache": "*",
         "wpackagist-plugin/safe-redirect-manager": "*",
         "wpackagist-plugin/wp-native-php-sessions": "*",
@@ -83,8 +84,7 @@
     "require-dev": {
         "assertwell/shellcheck": "^1.0",
         "pantheon-systems/pantheon-wp-coding-standards": "*",
-        "roave/security-advisories": "dev-latest",
-        "wpackagist-plugin/debug-bar": "^1.1"
+        "roave/security-advisories": "dev-latest"
     },
     "config": {
         "optimize-autoloader": true,
