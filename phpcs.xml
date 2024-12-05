@@ -22,6 +22,7 @@
   <exclude-pattern>web/app/plugins/query-monitor/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/safe-redirect-manager/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/wp-native-php-sessions/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/pantheon-hud/*</exclude-pattern>
   <exclude-pattern>web/app/object-cache.php</exclude-pattern>
   <exclude-pattern>web/private/*</exclude-pattern>
   <exclude-pattern>upstream-configuration/*</exclude-pattern>
