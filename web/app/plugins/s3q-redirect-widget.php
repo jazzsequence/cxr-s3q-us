@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function bootstrap() {
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_dashboard_widget' );
+	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_list_dashboard_widget' );
+	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\redirect_list_widget_styles' );
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 }
 
@@ -30,6 +32,14 @@ function add_redirect_dashboard_widget() {
 		__( 's3q Custom Link', 's3q-redirect-widget' ),
 		__NAMESPACE__ . '\\render_redirect_dashboard_widget'
 	);
+}
+
+function add_redirect_list_dashboard_widget() {
+	wp_add_dashboard_widget(
+		'redirect_list_dashboard_widget',
+        'Recent Redirects',
+        __NAMESPACE__ . '\\render_redirect_list_dashboard_widget'
+    );
 }
 
 function render_redirect_dashboard_widget() {
@@ -81,6 +91,73 @@ function render_redirect_dashboard_widget() {
 		</p>
 	</form>
 <?php
+}
+
+function render_redirect_list_dashboard_widget() {
+    // Number of redirects to display per page
+    $redirects_per_page = 10;
+
+    // Current page
+    $current_page = isset( $_GET['redirect_page'] ) ? absint( $_GET['redirect_page'] ) : 1;
+
+    // Query for the redirects
+    $query_args = [
+        'post_type' => 'redirect_rule',
+        'posts_per_page' => $redirects_per_page,
+        'paged' => $current_page,
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ];
+    $redirect_query = new WP_Query( $query_args );
+
+    if ( $redirect_query->have_posts() ) {
+        echo '<div class="redirect-list-widget">';
+
+        // List the redirects
+        while ( $redirect_query->have_posts() ) {
+            $redirect_query->the_post();
+
+            $redirect_from = get_post_meta( get_the_ID(), '_redirect_rule_from', true );
+            $redirect_to   = get_post_meta( get_the_ID(), '_redirect_rule_to', true );
+
+            $full_url = home_url( $redirect_from );
+
+            echo '<div style="margin-bottom: 1em;">';
+            echo '<strong>' . esc_html__( 'Short URL', 's3q-redirect-widget' ) . ':</strong>';
+            echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '" style="width: 100%; padding: 5px;">';
+            echo '<strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a>';
+            echo '</div>';
+        }
+
+        echo '</div>';
+
+        // Pagination links
+        $total_pages = $redirect_query->max_num_pages;
+        if ( $total_pages > 1 ) {
+            echo '<div class="pagination">';
+            for ( $i = 1; $i <= $total_pages; $i++ ) {
+                $class = ( $i === $current_page ) ? 'current' : '';
+                $link  = add_query_arg( 'redirect_page', $i );
+                echo '<a href="' . esc_url( $link ) . '" class="' . esc_attr( $class ) . '" style="margin-right: 5px;">' . esc_html( $i ) . '</a>';
+            }
+            echo '</div>';
+        }
+
+        // Reset post data
+        wp_reset_postdata();
+    } else {
+        echo '<p>' . esc_html__( 'No redirects found.', 's3q-redirect-widget' ) . '</p>';
+    }
+}
+
+function redirect_list_widget_styles() {
+    wp_add_inline_style(
+        'dashboard',
+        '.redirect-list-widget input { cursor: pointer; }
+         .pagination a { text-decoration: none; padding: 3px 8px; background: #0073aa; color: #fff; border-radius: 3px; }
+         .pagination a.current { background: #333; }'
+    );
 }
 
 // Make it so.
