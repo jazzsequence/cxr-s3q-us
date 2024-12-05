@@ -50,7 +50,7 @@ function add_redirect_dashboard_widget() {
 function add_redirect_list_dashboard_widget() {
 	wp_add_dashboard_widget(
 		'redirect_list_dashboard_widget',
-        'Recent Redirects',
+        esc_html__( 's3q Links', 's3q-redirect-widget' ),
         __NAMESPACE__ . '\\render_redirect_list_dashboard_widget'
     );
 }
