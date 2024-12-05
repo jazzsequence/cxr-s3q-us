@@ -291,51 +291,66 @@ function enqueue_redirect_widget_script() {
         wp_add_inline_script(
             'redirect-widget-inline',
             "
-            document.addEventListener('DOMContentLoaded', function () {
-                const textInputs = document.querySelectorAll('.redirect-list-widget input, .favorited-redirects input');
-                textInputs.forEach((input) => {
-                    input.addEventListener('click', function () {
-                        this.select();
-                    });
-                });
+			document.addEventListener('DOMContentLoaded', function () {
+				const widgetContainer = document.querySelector('.redirect-list-widget');
+				const favoritedContainer = document.querySelector('.favorited-redirects');
 
-                const favoriteToggles = document.querySelectorAll('.favorite-toggle');
-                favoriteToggles.forEach((toggle) => {
-                    toggle.addEventListener('click', function () {
-                        const postId = this.dataset.postId;
-                        const action = this.dataset.action;
-                        const icon = this;
+				// Handle selection of short URLs
+				[widgetContainer, favoritedContainer].forEach(container => {
+					if (container) {
+						container.addEventListener('click', function (event) {
+							if (event.target.tagName === 'INPUT') {
+								event.target.select();
+							}
+						});
+					}
+				});
 
-						fetch(s3qRedirectWidget.ajaxurl, {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/x-www-form-urlencoded',
-							},
-							body: new URLSearchParams({
-								action: action,
-								post_id: postId,
-								_wpnonce: s3qRedirectWidget.nonce
-							})
+				// Handle favoriting functionality
+				const handleFavoriteToggle = function (icon) {
+					const postId = icon.dataset.postId;
+					const action = icon.dataset.action;
+
+					fetch(s3qRedirectWidget.ajaxurl, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: new URLSearchParams({
+							action: action,
+							post_id: postId,
+							_wpnonce: s3qRedirectWidget.nonce
 						})
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                if (action === 'add_favorite') {
-                                    icon.classList.remove('dashicons-star-empty');
-                                    icon.classList.add('dashicons-star-filled');
-                                    icon.dataset.action = 'remove_favorite';
-                                } else {
-                                    icon.classList.remove('dashicons-star-filled');
-                                    icon.classList.add('dashicons-star-empty');
-                                    icon.dataset.action = 'add_favorite';
-                                }
-                            } else {
-                                console.error(data.message);
-                            }
-                        });
-                    });
-                });
-            });
+					})
+					.then(response => response.json())
+					.then(data => {
+						if (data.success) {
+							if (action === 'add_favorite') {
+								icon.classList.remove('dashicons-star-empty');
+								icon.classList.add('dashicons-star-filled');
+								icon.dataset.action = 'remove_favorite';
+							} else {
+								icon.classList.remove('dashicons-star-filled');
+								icon.classList.add('dashicons-star-empty');
+								icon.dataset.action = 'add_favorite';
+							}
+						} else {
+							console.error(data.message);
+						}
+					});
+				};
+
+				// Attach event listener to all toggle icons
+				[widgetContainer, favoritedContainer].forEach(container => {
+					if (container) {
+						container.addEventListener('click', function (event) {
+							if (event.target.classList.contains('favorite-toggle')) {
+								handleFavoriteToggle(event.target);
+							}
+						});
+					}
+				});
+			});
             "
         );
 
