@@ -29,7 +29,7 @@ function add_redirect_dashboard_widget() {
 	wp_add_dashboard_widget(
 		'redirect_dashboard_widget', 
 		__( 's3q Custom Link', 's3q-redirect-widget' ),
-		'render_redirect_dashboard_widget'
+		__NAMESPACE__ . '\\render_redirect_dashboard_widget'
 	);
 }
 
