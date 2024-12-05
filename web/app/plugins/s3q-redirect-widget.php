@@ -203,17 +203,26 @@ function redirect_list_widget_styles() {
         '.redirect-list-widget input { cursor: pointer; }
          .pagination a { text-decoration: none; padding: 3px 8px; background: #0073aa; color: #fff; border-radius: 3px; }
          .pagination a.current { background: #333; }
-    	.favorite-toggle { font-size: 20px; color: #ffcc00; cursor: pointer; }
      	.favorite-toggle:hover { color: #ff9900; }
 		.redirect-list-widget input:focus, .favorited-redirects input:focus { border-color: #0073aa; box-shadow: 0 0 3px #0073aa; }
 		#redirect_list_dashboard_widget { padding-right: 20px; }
-		.redirect-item input { width: 100%; padding: 5px; }
 		.redirect-item {
-			display: grid;
-			grid-template-columns: auto 1fr;
-			align-items: center;
-			gap: 10px; /* Adjust spacing between the star and input */
-			margin-bottom: 1em;
+				display: flex;
+				align-items: center;
+				gap: 10px; /* Adjust space between the icon and the input field */
+				margin-bottom: 1em;
+			}
+		.redirect-item input {
+			flex-grow: 1; /* Ensure input stretches to fill available space */
+			padding: 5px;
+			height: 40px; /* Enforce consistent height across all inputs */
+			box-sizing: border-box; /* Include padding and border in height calculation */
+		}
+		.favorite-toggle {
+			font-size: 20px;
+			color: #ffcc00;
+			cursor: pointer;
+			align-self: flex-start; /* Align star icon at the top for better consistency */
 		}'
     );
 }
