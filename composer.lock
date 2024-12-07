@@ -367,26 +367,25 @@
         },
         {
             "name": "pantheon-systems/pantheon-hud",
-            "version": "0.4.3",
+            "version": "0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pantheon-systems/pantheon-hud.git",
-                "reference": "1c4c2be9a7ae3255127b88667105c25d1204cff1"
+                "reference": "44c38c60321789602f329ba54979a2cef8c09304"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pantheon-systems/pantheon-hud/zipball/1c4c2be9a7ae3255127b88667105c25d1204cff1",
-                "reference": "1c4c2be9a7ae3255127b88667105c25d1204cff1",
+                "url": "https://api.github.com/repos/pantheon-systems/pantheon-hud/zipball/44c38c60321789602f329ba54979a2cef8c09304",
+                "reference": "44c38c60321789602f329ba54979a2cef8c09304",
                 "shasum": ""
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
                 "pantheon-systems/pantheon-wordpress-upstream-tests": "dev-master",
-                "phpcompatibility/php-compatibility": "^9.3",
+                "pantheon-systems/pantheon-wp-coding-standards": "^2.0",
+                "pantheon-systems/wpunit-helpers": "^2.0",
                 "phpunit/phpunit": "^9",
                 "symfony/yaml": "^5.4 || ^6",
-                "wp-coding-standards/wpcs": "dev-develop as 2.3.1",
-                "yoast/phpunit-polyfills": "^1.0"
+                "yoast/phpunit-polyfills": "^2.0"
             },
             "type": "wordpress-plugin",
             "notification-url": "https://packagist.org/downloads/",
@@ -406,9 +405,9 @@
             "description": "Provide situational awareness of the Pantheon platform from within your WordPress dashboard.",
             "support": {
                 "issues": "https://github.com/pantheon-systems/pantheon-hud/issues",
-                "source": "https://github.com/pantheon-systems/pantheon-hud/tree/0.4.3"
+                "source": "https://github.com/pantheon-systems/pantheon-hud/tree/0.4.4"
             },
-            "time": "2023-04-06T21:02:55+00:00"
+            "time": "2024-12-06T21:38:28+00:00"
         },
         {
             "name": "pantheon-systems/pantheon-mu-plugin",
@@ -3299,7 +3298,7 @@
     "platform": {
         "php": ">=8.0"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.3.0"
     },
