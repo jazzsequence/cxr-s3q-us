@@ -149,11 +149,14 @@ switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
         break;
 }
 
+// Get OCP token.
+$ocp_token = ( function_exists( 'pantheon_get_secret' ) ) ? pantheon_get_secret( 'ocp_token' ) : null;
+
 /**
  * Object Cache Pro config
  */
-Config::define( 'WP_REDIS_CONFIG', [
-	'token' => pantheon_get_secret( 'ocp_token' ),
+$ocp_config = [
+	'token' => $ocp_token,
 	'host' => getenv('CACHE_HOST') ?: '127.0.0.1',
 	'port' => getenv('CACHE_PORT') ?: 6379,
 	'database' => getenv('CACHE_DB') ?: 0,
@@ -176,8 +179,14 @@ Config::define( 'WP_REDIS_CONFIG', [
 	'compression' => 'zstd',
 	'async_flush' => true,
 	'strict' => true,	
-] );
+];
 
+if ( isset( $_ENV['LANDO'] ) && $_ENV['LANDO'] === 'ON' ) {
+	$ocp_config['serializer'] = 'php';
+	$ocp_config['compression'] = 'none';
+}
+
+Config::define( 'WP_REDIS_CONFIG', $ocp_config );
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
  * See https://codex.wordpress.org/Function_Reference/is_ssl#Notes
