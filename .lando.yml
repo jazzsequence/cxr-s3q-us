@@ -1,0 +1,7 @@
+name: cxr-s3q-us
+recipe: pantheon
+config:
+  framework: wordpress
+  id: f07dc91b-ef2d-4aa5-b847-bc16639d6d8b
+  site: cxr-s3q-us
+  webroot: web/
