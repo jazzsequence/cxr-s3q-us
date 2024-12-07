@@ -11,66 +11,42 @@
 namespace s3q\Menus;
 
 function custom_reorganize_admin_menu() {
-	// Remove top-level menu items
-	remove_menu_page('edit.php');                 // Posts
-	remove_menu_page('edit-comments.php');        // Comments
-	remove_menu_page('edit.php?post_type=page');  // Pages
-	remove_menu_page('plugins.php');             // Plugins
-	remove_menu_page('users.php');               // Users
-	remove_menu_page('options-general.php');     // Settings
+	global $menu, $pagenow;
 
-	// Re-add them under Tools
-	add_submenu_page(
-		'tools.php',
-		'Posts',
-		'Posts',
-		'edit_posts',
-		'edit.php'
-	);
+	// List of menus to reorganize
+	$menus_to_move = [
+		'edit.php' => ['Posts', 'edit_posts', 'edit.php', 'post-new.php', 'post.php'],
+		'edit-comments.php' => ['Comments', 'moderate_comments', 'edit-comments.php', 'comment.php'],
+		'edit.php?post_type=page' => ['Pages', 'edit_pages', 'edit.php?post_type=page', 'post-new.php?post_type=page', 'post.php'],
+		'plugins.php' => ['Plugins', 'activate_plugins', 'plugins.php', 'plugin-install.php', 'plugin-editor.php'],
+		'users.php' => ['Users', 'list_users', 'users.php', 'user-edit.php', 'profile.php'],
+		'options-general.php' => ['Settings', 'manage_options', 'options-general.php', 'options.php'],
+	];
 
-	add_submenu_page(
-		'tools.php',
-		'Comments',
-		'Comments',
-		'moderate_comments',
-		'edit-comments.php'
-	);
+	foreach ($menus_to_move as $menu_slug => $menu_details) {
+		// Check if the current page matches the menu being moved
+		$is_on_menu_page = in_array($pagenow, array_slice($menu_details, 2), true);
 
-	add_submenu_page(
-		'tools.php',
-		'Pages',
-		'Pages',
-		'edit_pages',
-		'edit.php?post_type=page'
-	);
+		if (!$is_on_menu_page) {
+			// If not on the menu's page, remove the menu and add it to Tools
+			remove_menu_page($menu_slug);
 
-	add_submenu_page(
-		'tools.php',
-		'Plugins',
-		'Plugins',
-		'activate_plugins',
-		'plugins.php'
-	);
-
-	add_submenu_page(
-		'tools.php',
-		'Users',
-		'Users',
-		'list_users',
-		'users.php'
-	);
-
-	add_submenu_page(
-		'tools.php',
-		'Settings',
-		'Settings',
-		'manage_options',
-		'options-general.php'
-	);
+			if ( $menu_details[0] !== 'Comments' ) {
+				add_submenu_page(
+					'tools.php',
+					$menu_details[0], // Page title
+					$menu_details[0], // Menu label
+					$menu_details[1], // Capability
+					$menu_slug        // Menu slug
+				);
+			}
+		}
+	}
 }
 
 function bootstrap() {
-	add_action('admin_menu', __NAMESPACE__ . '\\custom_reorganize_admin_menu', 999); // Priority ensures changes are made last.
+	// Hook the menu reorganization to admin_menu
+	add_action( 'admin_menu', __NAMESPACE__ . '\\custom_reorganize_admin_menu', 999 );
 }
 
 // Make it so.
