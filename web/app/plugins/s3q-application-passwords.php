@@ -12,7 +12,7 @@ namespace s3q\ApplicationPasswords;
 
 function bootstrap() {
 	add_filter('wp_is_application_passwords_available', __NAMESPACE__ . '\\override_application_password_check');
-	add_action('cli_init', 'register_application_password_wp_cli_command');
+	add_action('cli_init', __NAMESPACE__ . '\\register_application_password_wp_cli_command');
 }
 
 function override_application_password_check($available) {
