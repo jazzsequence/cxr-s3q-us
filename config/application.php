@@ -187,6 +187,9 @@ if ( isset( $_ENV['LANDO'] ) && $_ENV['LANDO'] === 'ON' ) {
 }
 
 Config::define( 'WP_REDIS_CONFIG', $ocp_config );
+
+Config::define( 'APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK', true );
+
 /**
  * Allow WordPress to detect HTTPS when used behind a reverse proxy or a load balancer
  * See https://codex.wordpress.org/Function_Reference/is_ssl#Notes
