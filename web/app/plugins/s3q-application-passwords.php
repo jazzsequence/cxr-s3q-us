@@ -22,40 +22,37 @@ function override_application_password_check($available) {
 	return $available;
 }
 
-if (defined('WP_CLI') && WP_CLI) {
-	/**
-	 * Registers a custom WP-CLI command to create Application Passwords.
-	 */
-	function register_application_password_wp_cli_command() {
-		WP_CLI::add_command('application-password', function ($args, $assoc_args) {
-			$defaults = [
-				'username' => '',
-				'name'     => '',
-			];
-			$assoc_args = wp_parse_args($assoc_args, $defaults);
+/**
+ * Registers a custom WP-CLI command to create Application Passwords.
+ */
+function register_application_password_wp_cli_command() {
+	WP_CLI::add_command('application-password', function ($args, $assoc_args) {
+		$defaults = [
+			'username' => '',
+			'name'     => '',
+		];
+		$assoc_args = wp_parse_args($assoc_args, $defaults);
 
-			if (empty($assoc_args['username']) || empty($assoc_args['name'])) {
-				WP_CLI::error('You must provide both a username and an application name.');
-			}
+		if (empty($assoc_args['username']) || empty($assoc_args['name'])) {
+			WP_CLI::error('You must provide both a username and an application name.');
+		}
 
-			$user = get_user_by('login', $assoc_args['username']);
-			if (! $user) {
-				WP_CLI::error("User '{$assoc_args['username']}' not found.");
-			}
+		$user = get_user_by('login', $assoc_args['username']);
+		if (! $user) {
+			WP_CLI::error("User '{$assoc_args['username']}' not found.");
+		}
 
-			$password_data = WP_Application_Passwords::create_new_application_password($user->ID, [
-				'name' => $assoc_args['name'],
-			]);
+		$password_data = WP_Application_Passwords::create_new_application_password($user->ID, [
+			'name' => $assoc_args['name'],
+		]);
 
-			if (is_wp_error($password_data)) {
-				WP_CLI::error($password_data->get_error_message());
-			}
+		if (is_wp_error($password_data)) {
+			WP_CLI::error($password_data->get_error_message());
+		}
 
-			WP_CLI::success("Application Password created for {$assoc_args['username']}: {$password_data[0]}");
-		});
-	}
+		WP_CLI::success("Application Password created for {$assoc_args['username']}: {$password_data[0]}");
+	});
 }
-
 
 // Maximum effort.
 bootstrap();
