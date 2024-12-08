@@ -42,7 +42,7 @@ function register_application_password_wp_cli_command() {
 			\WP_CLI::error("User '{$assoc_args['username']}' not found.");
 		}
 
-		$password_data = WP_Application_Passwords::create_new_application_password($user->ID, [
+		$password_data = \WP_Application_Passwords::create_new_application_password($user->ID, [
 			'name' => $assoc_args['name'],
 		]);
 
