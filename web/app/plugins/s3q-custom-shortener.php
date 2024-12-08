@@ -14,7 +14,6 @@ namespace s3q\Shortener;
 function bootstrap() {
 	add_action('admin_menu', __NAMESPACE__ . '\\add_bookmarklet_menu_page');
 	add_action('rest_api_init', __NAMESPACE__ . '\\register_redirect_manager_route');
-	add_filter('wp_is_application_passwords_available', __NAMESPACE__ . '\\override_application_password_check');
 }
 
 // Adds the submenu page under Tools
@@ -157,14 +156,6 @@ function list_redirects_via_api() {
 
 	return rest_ensure_response($redirects);
 }
-
-function override_application_password_check($available) {
-	if (defined('APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK') && APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK) {
-		return true;
-	}
-	return $available;
-};
-
 
 // Maximum effort.
 bootstrap();

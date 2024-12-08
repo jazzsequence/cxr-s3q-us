@@ -81,6 +81,7 @@ web/app/plugins/*
 !web/app/plugins/s3q-redirect-widget.php
 !web/app/plugins/s3q-hide-menus.php
 !web/app/plugins/s3q-custom-shortener.php
+!web/app/plugins/s3q-application-passwords.php
 
 # Themes
 # We don't ignore all themes by default as these are most commonly where a
