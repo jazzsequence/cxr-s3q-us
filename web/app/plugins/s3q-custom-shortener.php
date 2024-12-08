@@ -11,15 +11,14 @@
 
 namespace s3q\Shortener;
 
-function bootstrap()
-{
+function bootstrap() {
 	add_action('admin_menu', __NAMESPACE__ . '\\add_bookmarklet_menu_page');
 	add_action('rest_api_init', __NAMESPACE__ . '\\register_redirect_manager_route');
+	add_filter('wp_is_application_passwords_available', __NAMESPACE__ . '\\override_application_password_check');
 }
 
 // Adds the submenu page under Tools
-function add_bookmarklet_menu_page()
-{
+function add_bookmarklet_menu_page() {
 	add_submenu_page(
 		'tools.php',                // Parent menu slug
 		'Bookmarklet',              // Page title
@@ -83,8 +82,7 @@ function render_bookmarklet_page() {
 <?php
 }
 
-function register_redirect_manager_route()
-{
+function register_redirect_manager_route() {
 	register_rest_route('redirect-manager/v1', '/add', [
 		'methods' => 'POST',
 		'callback' => 'add_redirect_via_api',
@@ -112,8 +110,7 @@ function register_redirect_manager_route()
 	]);
 }
 
-function add_redirect_via_api($request)
-{
+function add_redirect_via_api($request) {
 	$from = sanitize_text_field($request->get_param('from'));
 	$to   = esc_url_raw($request->get_param('to'));
 
@@ -137,8 +134,7 @@ function add_redirect_via_api($request)
 	}
 }
 
-function list_redirects_via_api()
-{
+function list_redirects_via_api() {
 	$query = new WP_Query([
 		'post_type'      => 'redirect_rule',
 		'posts_per_page' => -1,
@@ -161,6 +157,14 @@ function list_redirects_via_api()
 
 	return rest_ensure_response($redirects);
 }
+
+function override_application_password_check($available) {
+	if (defined('APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK') && APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK) {
+		return true;
+	}
+	return $available;
+};
+
 
 // Maximum effort.
 bootstrap();
