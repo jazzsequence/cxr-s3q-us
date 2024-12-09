@@ -37,7 +37,7 @@ function render_bookmarklet_page() {
 
 	if ($api_key) {
 		// Generate the bookmarklet code
-		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;const from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;fetch('{$site_url}/wp-json/redirect-manager/v1/add',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'{$api_key}'},body:JSON.stringify({from:from,to:to})}).then(res=>res.json()).then(data=>alert(data.success?'Short URL: {$site_url}'+data.from:'Error creating short URL')).catch(err=>console.error(err));})();";
+		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;fetch('{$site_url}/wp-json/redirect-manager/v1/add',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'{$api_key}'},body:JSON.stringify({from:from,to:to})}).then(res=>res.json()).then(data=>alert(data.success?'Short URL: {$site_url}'+data.from:'Error creating short URL')).catch(err=>console.error(err));})();";
 	} else {
 		$bookmarklet = esc_html__('API key not configured. Please set it up in Pantheon Secrets.', 's3q-shortener');
 	}
@@ -95,6 +95,11 @@ function add_redirect_via_api($request) {
 	$from = sanitize_text_field($request->get_param('from'));
 	$to   = esc_url_raw($request->get_param('to'));
 
+	// Ensure the 'from' value starts with a slash
+	if (substr($from, 0, 1) !== '/') {
+		$from = '/' . $from;
+	}
+
 	if (empty($from) || empty($to)) {
 		return new WP_Error(
 			'invalid_parameters',
@@ -103,6 +108,26 @@ function add_redirect_via_api($request) {
 		);
 	}
 
+	// Check for duplicate short URLs
+	$existing_post = get_posts([
+		'post_type'  => 'redirect_rule',
+		'meta_query' => [
+			[
+				'key'   => '_redirect_rule_from',
+				'value' => $from,
+			],
+		],
+	]);
+
+	if ($existing_post) {
+		return new WP_Error(
+			'duplicate_short_url',
+			__('This short URL already exists. Please choose another.', 's3q-shortener'),
+			['status' => 400]
+		);
+	}
+
+	// Insert the new redirect
 	$post_id = wp_insert_post([
 		'post_type'   => 'redirect_rule',
 		'post_status' => 'publish',
@@ -116,7 +141,7 @@ function add_redirect_via_api($request) {
 		return rest_ensure_response([
 			'success' => true,
 			'post_id' => $post_id,
-			'from'    => $from, // Return the custom short path
+			'from'    => $from, // Return the corrected short path
 		]);
 	} else {
 		return new WP_Error(
