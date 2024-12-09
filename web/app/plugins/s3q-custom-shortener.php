@@ -37,7 +37,7 @@ function render_bookmarklet_page() {
 
 	if ($api_key) {
 		// Generate the bookmarklet code
-		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;fetch('{$site_url}/wp-json/redirect-manager/v1/add',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'{$api_key}'},body:JSON.stringify({from:from,to:to})}).then(res=>res.json()).then(data=>alert(data.success?'Short URL: {$site_url}'+from:'Error creating short URL')).catch(err=>console.error(err));})();";
+		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;fetch('{$site_url}/wp-json/redirect-manager/v1/add',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'{$api_key}'},body:JSON.stringify({from:from,to:to})}).then(res=>res.json()).then(data=>alert(data.success?'Short URL: {$site_url}'+data.from:'Error creating short URL')).catch(err=>alert('An error occurred: '+err));})();";
 	} else {
 		$bookmarklet = esc_html__('API key not configured. Please set it up in Pantheon Secrets.', 's3q-shortener');
 	}
