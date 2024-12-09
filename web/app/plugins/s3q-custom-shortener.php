@@ -84,7 +84,7 @@ function render_bookmarklet_page() {
 function register_redirect_manager_route() {
 	register_rest_route('redirect-manager/v1', '/add', [
 		'methods' => 'POST',
-		'callback' => 'add_redirect_via_api',
+		'callback' => __NAMESPACE__ . '\\add_redirect_via_api',
 		'permission_callback' => function () {
 			return current_user_can('edit_posts'); // Restrict access to authorized users
 		},
@@ -102,7 +102,7 @@ function register_redirect_manager_route() {
 
 	register_rest_route('redirect-manager/v1', '/list', [
 		'methods'  => 'GET',
-		'callback' => 'list_redirects_via_api',
+		'callback' => __NAMESPACE__ . '\\list_redirects_via_api',
 		'permission_callback' => function () {
 			return current_user_can('edit_posts'); // Restrict access
 		},
