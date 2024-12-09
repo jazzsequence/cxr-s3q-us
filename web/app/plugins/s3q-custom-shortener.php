@@ -39,7 +39,7 @@ function render_bookmarklet_page() {
 
 	if ($api_key) {
 		// Generate the bookmarklet code
-		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;window.location='{$public_endpoint}?to='+encodeURIComponent(to)+'&from='+encodeURIComponent(from);})();";
+		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;window.open('{$public_endpoint}?to='+encodeURIComponent(to)+'&from='+encodeURIComponent(from),'_blank','width=400,height=300,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');})();";
 	} else {
 		$bookmarklet = esc_html__('API key not configured. Please set it up in Pantheon Secrets.', 's3q-shortener');
 	}
