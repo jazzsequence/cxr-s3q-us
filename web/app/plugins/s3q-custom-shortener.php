@@ -16,6 +16,8 @@ use WP_Error;
 function bootstrap() {
 	add_action('admin_menu', __NAMESPACE__ . '\\add_bookmarklet_menu_page');
 	add_action('rest_api_init', __NAMESPACE__ . '\\register_redirect_manager_route');
+	add_action('init', __NAMESPACE__ . '\\add_rewrite_rule');
+	add_action('template_redirect', __NAMESPACE__ . '\\public_shorten_url_page');
 }
 
 // Adds the submenu page under Tools
@@ -34,10 +36,11 @@ function add_bookmarklet_menu_page() {
 function render_bookmarklet_page() {
 	$site_url = home_url();
 	$api_key = pantheon_get_secret('bookmarklet_api');
+	$public_endpoint = "{$site_url}/shorten-url";
 
 	if ($api_key) {
 		// Generate the bookmarklet code
-		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;fetch('{$site_url}/wp-json/redirect-manager/v1/add',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'{$api_key}'},body:JSON.stringify({from:from,to:to})}).then(res=>res.json()).then(data=>alert(data.success?'Short URL: {$site_url}'+data.from:'Error creating short URL')).catch(err=>alert('An error occurred: '+err));})();";
+		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;window.location='{$public_endpoint}?to='+encodeURIComponent(to)+'&from='+encodeURIComponent(from);})();";		
 	} else {
 		$bookmarklet = esc_html__('API key not configured. Please set it up in Pantheon Secrets.', 's3q-shortener');
 	}
@@ -150,6 +153,53 @@ function add_redirect_via_api($request) {
 			['status' => 500]
 		);
 	}
+}
+
+function add_rewrite_rule() {
+    add_rewrite_rule(
+        '^shorten-url$',
+        'index.php?shorten_url=1',
+        'top'
+    );
+    add_rewrite_tag('%shorten_url%', '1');
+}
+
+function public_shorten_url_page() {
+    if (get_query_var('shorten_url') === '1') {
+        $to = esc_url_raw($_GET['to'] ?? '');
+        $from = sanitize_text_field($_GET['from'] ?? '');
+
+        if (empty($to) || empty($from)) {
+            wp_die('Invalid parameters. Both "to" and "from" are required.');
+        }
+
+        $api_key = pantheon_get_secret('bookmarklet_api');
+        $response = wp_remote_post(home_url('/wp-json/redirect-manager/v1/add'), [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'X-API-Key'    => $api_key,
+            ],
+            'body' => json_encode([
+                'to'   => $to,
+                'from' => $from,
+            ]),
+        ]);
+
+        if (is_wp_error($response)) {
+            wp_die('Error creating short URL: ' . $response->get_error_message());
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $result = json_decode($body, true);
+
+        if (!empty($result['success'])) {
+            echo "Short URL created successfully! <a href='{$result['from']}'>{$result['from']}</a>";
+        } else {
+            echo 'Error: ' . ($result['message'] ?? 'Unknown error');
+        }
+
+        exit;
+    }
 }
 
 // Bootstrap the plugin
