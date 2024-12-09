@@ -15,7 +15,10 @@
   <exclude-pattern>vendor/</exclude-pattern>
 
   <!-- Start Pantheon addition: Ignore plugins and quicksilver scripts -->
-  <exclude-pattern>web/app/mu-plugins/*</exclude-pattern>
+  <exclude-pattern>web/app/mu-plugins/bedrock-disallow-indexing/*</exclude-pattern>
+  <exclude-pattern>web/app/mu-plugins/pantheon-mu-plugin/*</exclude-pattern>
+  <exclude-pattern>web/app/mu-plugins/bedrock-autoloader.php</exclude-pattern>
+  <exclude-pattern>web/app/mu-plugins/filters.php</exclude-pattern>
   <!-- This line prevents all plugins from being linted. Remove this line if you want to lint plugins. -->
   <exclude-pattern>web/app/plugins/object-cache-pro/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/pantheon-advanced-page-cache/*</exclude-pattern>
