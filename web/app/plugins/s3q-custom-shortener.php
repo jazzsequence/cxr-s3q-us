@@ -98,12 +98,33 @@ function add_redirect_via_api($request) {
 		);
 	}
 
+	// Check for duplicate redirects
+	$existing_post = get_posts([
+		'post_type'  => 'redirect_rule',
+		'meta_query' => [
+			[
+				'key'   => '_redirect_rule_from',
+				'value' => $from,
+			],
+		],
+		'posts_per_page' => 1,
+	]);
+
+	if (!empty($existing_post)) {
+		return new WP_Error(
+			'duplicate_redirect',
+			__('A redirect with this short URL already exists. Please choose another.', 's3q-shortener'),
+			['status' => 400]
+		);
+	}
+
+	// Insert the new redirect
 	$post_id = wp_insert_post([
-		'post_type' => 'redirect_rule',
+		'post_type'   => 'redirect_rule',
 		'post_status' => 'publish',
-		'meta_input' => [
+		'meta_input'  => [
 			'_redirect_rule_from' => $from,
-			'_redirect_rule_to' => $to,
+			'_redirect_rule_to'   => $to,
 		],
 	]);
 
@@ -111,7 +132,7 @@ function add_redirect_via_api($request) {
 		return rest_ensure_response([
 			'success' => true,
 			'post_id' => $post_id,
-			'from' => $from,
+			'from'    => $from,
 		]);
 	}
 
