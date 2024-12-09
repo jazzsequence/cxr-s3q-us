@@ -23,8 +23,8 @@ function bootstrap() {
 function add_bookmarklet_menu_page() {
 	add_submenu_page(
 		'tools.php',
-		'Bookmarklet',
-		'URL Shortener Bookmarklet',
+		__( 'Bookmarklet', 's3q-shortener' ),
+		__( 'URL Shortener Bookmarklet', 's3q-shortener' ),
 		'manage_options',
 		'shortener-bookmarklet',
 		__NAMESPACE__ . '\\render_bookmarklet_page'
@@ -135,7 +135,7 @@ function handle_public_shorten_url() {
 		$from = sanitize_text_field($_GET['from'] ?? '');
 
 		if (empty($to) || empty($from)) {
-			wp_die('Invalid parameters. Both "to" and "from" are required.');
+			wp_die( __('Invalid parameters. Both "to" and "from" are required.', 's3q-shortener' ) );
 		}
 
 		$api_key = pantheon_get_secret('bookmarklet_api');
@@ -148,16 +148,20 @@ function handle_public_shorten_url() {
 		]);
 
 		if (is_wp_error($response)) {
-			wp_die('Error creating short URL: ' . $response->get_error_message());
+			wp_die( __( 'Error creating short URL: ', 's3q-shortener' ) . $response->get_error_message());
 		}
 
 		$body = wp_remote_retrieve_body($response);
 		$result = json_decode($body, true);
 
 		if (!empty($result['success'])) {
-			echo "Short URL created successfully! <a href='{$result['from']}'>{$result['from']}</a>";
+			echo wp_kses_post( sprintf( 
+				__( 'Short URL created successfully! <a href="%1$s">%2$s</a>', 's3q-shortener' ), 
+				$result['from'],
+				$result['from'] 
+			) );
 		} else {
-			echo 'Error: ' . ($result['message'] ?? 'Unknown error');
+			echo esc_html__( 'Error: ', 's3q-shortener' ) . ( $result['message'] ?? esc_html__( 'Unknown error', 's3q-shortener' ) );
 		}
 
 		exit;
