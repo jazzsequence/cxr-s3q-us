@@ -12,6 +12,9 @@ namespace s3q\Shortener;
 
 use WP_Error;
 
+/**
+ * Bootstrap the plugin
+ */
 function bootstrap() {
 	add_action( 'admin_menu', __NAMESPACE__ . '\\add_bookmarklet_menu_page' );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_redirect_manager_route' );
@@ -19,7 +22,9 @@ function bootstrap() {
 	add_action( 'template_redirect', __NAMESPACE__ . '\\handle_public_shorten_url' );
 }
 
-// Adds the submenu page under Tools
+/**
+ * Add the bookmarklet menu page under Tools
+ */
 function add_bookmarklet_menu_page() {
 	add_submenu_page(
 		'tools.php',
@@ -31,14 +36,18 @@ function add_bookmarklet_menu_page() {
 	);
 }
 
-// Renders the bookmarklet page content
+/**
+ * Renders the bookmarklet page content
+ * 
+ * @uses pantheon_get_secret()
+ */
 function render_bookmarklet_page() {
 	$site_url = home_url();
 	$api_key = pantheon_get_secret( 'bookmarklet_api' );
 	$public_endpoint = "{$site_url}/shorten-url";
 
 	if ( $api_key ) {
-		// Generate the bookmarklet code
+		// Generate the bookmarklet code.
 		$bookmarklet = "javascript:(function(){const to=prompt('Enter the URL to shorten:');if(!to)return;let from=prompt('Enter your custom short URL (e.g., /my-short-url):');if(!from)return;if(!from.startsWith('/'))from='/'+from;window.open('{$public_endpoint}?to='+encodeURIComponent(to)+'&from='+encodeURIComponent(from),'_blank','width=400,height=300,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');})();";
 	} else {
 		$bookmarklet = esc_html__( 'API key not configured. Please set it up in Pantheon Secrets.', 's3q-shortener' );
@@ -56,7 +65,9 @@ function render_bookmarklet_page() {
 	<?php
 }
 
-// Registers the REST API route
+/**
+ * Register the REST API route
+ */
 function register_redirect_manager_route() {
 	register_rest_route('redirect-manager/v1', '/add', [
 		'methods' => 'POST',
@@ -75,7 +86,13 @@ function register_redirect_manager_route() {
 	]);
 }
 
-// Validates the API key in the request
+/**
+ * Validate the API key in the request from Pantheon Secrets.
+ * 
+ * @uses pantheon_get_secret()
+ * @param WP_REST_Request $request The REST API request object.
+ * @return true|WP_Error
+ */
 function validate_api_key( $request ) {
 	$api_key = pantheon_get_secret( 'bookmarklet_api' );
 	$provided_key = $request->get_header( 'X-API-Key' );
@@ -91,7 +108,12 @@ function validate_api_key( $request ) {
 	return true;
 }
 
-// Handles the redirect creation via the REST API
+/**
+ * Handle the redirect creation via the REST API
+ * 
+ * @param WP_REST_Request $request The REST API request object.
+ * @return WP_Error|WP_REST_Response
+ */
 function add_redirect_via_api( $request ) {
 	$from = sanitize_text_field( $request->get_param( 'from' ) );
 	$to = esc_url_raw( $request->get_param( 'to' ) );
@@ -104,7 +126,7 @@ function add_redirect_via_api( $request ) {
 		);
 	}
 
-	// Check for duplicate redirects
+	// Check for duplicate redirects.
 	$existing_post = get_posts([
 		'post_type'  => 'redirect_rule',
 		'meta_query' => [
@@ -124,7 +146,7 @@ function add_redirect_via_api( $request ) {
 		);
 	}
 
-	// Insert the new redirect
+	// Insert the new redirect.
 	$post_id = wp_insert_post([
 		'post_type'   => 'redirect_rule',
 		'post_status' => 'publish',
@@ -149,20 +171,28 @@ function add_redirect_via_api( $request ) {
 	);
 }
 
-// Adds rewrite rules for the public page
+/**
+ * Add rewrite rules for the public url-shortener page
+ * 
+ * This page cannot be accessed directly, but is used by the bookmarklet.
+ */
 function add_rewrite_rules() {
 	add_rewrite_rule( '^shorten-url$', 'index.php?shorten_url=1', 'top' );
 	add_rewrite_tag( '%shorten_url%', '1' );
 }
 
-// Handles the public shortening page
+/**
+ * Handle the public URL shortening page
+ * 
+ * @uses pantheon_get_secret()
+ */
 function handle_public_shorten_url() {
 	if ( get_query_var( 'shorten_url' ) === '1' ) {
 		$to = esc_url_raw( $_GET['to'] ?? '' );
 		$from = sanitize_text_field( $_GET['from'] ?? '' );
 
 		if ( empty( $to ) || empty( $from ) ) {
-			wp_die( __( 'Invalid parameters. Both "to" and "from" are required.', 's3q-shortener' ) );
+			wp_die( esc_html__( 'Invalid parameters. Both "to" and "from" are required.', 's3q-shortener' ) );
 		}
 
 		$api_key = pantheon_get_secret( 'bookmarklet_api' );
@@ -178,7 +208,7 @@ function handle_public_shorten_url() {
 		]);
 
 		if ( is_wp_error( $response ) ) {
-			wp_die( __( 'Error creating short URL: ', 's3q-shortener' ) . $response->get_error_message() );
+			wp_die( esc_html( __( 'Error creating short URL: ', 's3q-shortener' ) . $response->get_error_message() ) );
 		}
 
 		$body = wp_remote_retrieve_body( $response );
@@ -186,12 +216,13 @@ function handle_public_shorten_url() {
 
 		if ( ! empty( $result['success'] ) ) {
 			echo wp_kses_post( sprintf( 
+				// translators: %1$s is the short URL, %2$s is the short URL.
 				__( 'Short URL created successfully! <a href="%1$s">%2$s</a>', 's3q-shortener' ), 
 				$result['from'],
 				$result['from'] 
 			) );
 		} else {
-			echo esc_html__( 'Error: ', 's3q-shortener' ) . ( $result['message'] ?? esc_html__( 'Unknown error', 's3q-shortener' ) );
+			echo esc_html( __( 'Error: ', 's3q-shortener' ) . ( $result['message'] ?? __( 'Unknown error', 's3q-shortener' ) ) );
 		}
 
 		exit;
