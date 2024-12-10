@@ -12,6 +12,7 @@
   <exclude-pattern>web/wp</exclude-pattern>
   <exclude-pattern>web/app/themes/twentytwentyfive/</exclude-pattern>
   <exclude-pattern>vendor/</exclude-pattern>
+  <exclude-pattern>web/xmlrpc.php</exclude-pattern>
 
   <!-- Start Pantheon addition: Ignore plugins and quicksilver scripts -->
   <exclude-pattern>web/app/mu-plugins/bedrock-disallow-indexing/*</exclude-pattern>
@@ -25,6 +26,8 @@
   <exclude-pattern>web/app/plugins/safe-redirect-manager/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/wp-native-php-sessions/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/pantheon-hud/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/two-factor/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/debug-bar/*</exclude-pattern>
   <exclude-pattern>web/app/object-cache.php</exclude-pattern>
   <exclude-pattern>web/private/*</exclude-pattern>
   <exclude-pattern>upstream-configuration/*</exclude-pattern>
