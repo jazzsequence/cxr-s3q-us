@@ -2,7 +2,7 @@
 /**
  * Plugin Name: s3q.us Redirect Widget
  * Description: Adds a WordPress admin dashboard widget for creating redirects using Safe Redirect Manager.
- * Version: 1.0
+ * Version: 1.0.1
  * Author: Chris Reynolds
  * Author URI: https://chrisreynolds.io
  * License: MIT
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define the plugin version.
-define( 'S3Q_REDIRECT_WIDGET_VERSION', '1.0' );
+define( 'S3Q_REDIRECT_WIDGET_VERSION', '1.0.1' );
 
 /**
  * Bootstrap the plugin.
