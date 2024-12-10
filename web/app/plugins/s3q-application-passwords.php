@@ -10,11 +10,22 @@
 
 namespace s3q\ApplicationPasswords;
 
+/**
+ * Bootstrap the plugin
+ */
 function bootstrap() {
 	add_filter( 'wp_is_application_passwords_available', __NAMESPACE__ . '\\override_application_password_check' );
 	add_action( 'cli_init', __NAMESPACE__ . '\\register_application_password_wp_cli_command' );
 }
 
+/**
+ * Overrides the check for whether Application Passwords are available.
+ *
+ * This is useful for disabling the conflict check that prevents Application Passwords from being used when WordPress thinks they should not be allowed (e.g. when basic auth is enabled).
+ *
+ * @param bool $available Whether Application Passwords are available.
+ * @return bool
+ */
 function override_application_password_check( $available ) {
 	if ( defined( 'APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK' ) && APPLICATION_PASSWORDS_DISABLE_CONFLICT_CHECK ) {
 		return true;
