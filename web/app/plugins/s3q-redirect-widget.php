@@ -10,11 +10,17 @@
 
 namespace s3q\Redirects;
 
-// Prevent direct access to the file
+// Prevent direct access to the file.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Define the plugin version.
+define( 'S3Q_REDIRECT_WIDGET_VERSION', '1.0' );
+
+/**
+ * Bootstrap the plugin.
+ */
 function bootstrap() {
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_dashboard_widget' );
 	add_action( 'wp_dashboard_setup', __NAMESPACE__ . '\\add_redirect_list_dashboard_widget' );
@@ -27,10 +33,23 @@ function bootstrap() {
 	add_filter( 'post_row_actions', __NAMESPACE__ . '\\add_favorite_action_link', 10, 2 );
 }
 
+/**
+ * Increase the maximum number of redirects to 9999.
+ *
+ * @return int
+ */
 function bump_max_redirects() {
 	return 9999;
 }
 
+/**
+ * Enable sticky support for the redirect_rule post type.
+ *
+ * @param array  $supports  An array of supported features.
+ * @param string $post_type The post type.
+ *
+ * @return array
+ */
 function enable_sticky_support_for_redirect_rule( $supports, $post_type ) {
 	if ( 'redirect_rule' === $post_type ) {
 		$supports[] = 'sticky';
@@ -38,6 +57,9 @@ function enable_sticky_support_for_redirect_rule( $supports, $post_type ) {
 	return $supports;
 }
 
+/**
+ * Add the Custom Link dashboard widget.
+ */
 function add_redirect_dashboard_widget() {
 	wp_add_dashboard_widget(
 		'redirect_dashboard_widget', 
@@ -46,6 +68,9 @@ function add_redirect_dashboard_widget() {
 	);
 }
 
+/**
+ * Add the s3q Links dashboard widget.
+ */
 function add_redirect_list_dashboard_widget() {
 	wp_add_dashboard_widget(
 		'redirect_list_dashboard_widget',
@@ -54,6 +79,9 @@ function add_redirect_list_dashboard_widget() {
 	);
 }
 
+/**
+ * Render the Custom Link dashboard widget.
+ */
 function render_redirect_dashboard_widget() {
 	if ( isset( $_POST['redirect_nonce'] ) && wp_verify_nonce( $_POST['redirect_nonce'], 'add_redirect' ) ) {
 		$redirect_from = isset( $_POST['redirect_from'] ) ? sanitize_text_field( $_POST['redirect_from'] ) : '';
@@ -105,6 +133,11 @@ function render_redirect_dashboard_widget() {
 	<?php
 }
 
+/**
+ * Render a single redirect rule.
+ * 
+ * @param int $post_id The post ID.
+ */
 function render_redirect_item( $post_id ) {
 	$redirect_from = get_post_meta( $post_id, '_redirect_rule_from', true );
 	$redirect_to = get_post_meta( $post_id, '_redirect_rule_to', true );
@@ -121,17 +154,22 @@ function render_redirect_item( $post_id ) {
 	echo '</div>';
 }
 
+/**
+ * Render the s3q Links dashboard widget.
+ * 
+ * @uses render_redirect_item()
+ */
 function render_redirect_list_dashboard_widget() {
-	// Number of redirects to display per page
+	// Number of redirects to display per page.
 	$redirects_per_page = 10;
 
-	// Current page
+	// Current page.
 	$current_page = isset( $_GET['redirect_page'] ) ? absint( $_GET['redirect_page'] ) : 1;
 
-	// Get sticky redirects
+	// Get sticky redirects.
 	$sticky_redirects = get_option( 'sticky_posts', [] );
 
-	// Display sticky (favorited) redirects
+	// Display sticky (favorited) redirects.
 	if ( $sticky_redirects ) {
 		$sticky_query_args = [
 			'post_type' => 'redirect_rule',
@@ -152,7 +190,7 @@ function render_redirect_list_dashboard_widget() {
 		}
 	}
 
-	// Query non-sticky redirects
+	// Query non-sticky redirects.
 	$query_args = [
 		'post_type' => 'redirect_rule',
 		'post__not_in' => $sticky_redirects,
@@ -175,7 +213,7 @@ function render_redirect_list_dashboard_widget() {
 
 		echo '</div>';
 
-		// Pagination links
+		// Pagination links.
 		$total_pages = $redirect_query->max_num_pages;
 		if ( $total_pages > 1 ) {
 			echo '<div class="pagination">';
@@ -193,6 +231,9 @@ function render_redirect_list_dashboard_widget() {
 	}
 }
 
+/**
+ * Add styles for the redirect list widget.
+ */
 function redirect_list_widget_styles() {
 	wp_add_inline_style(
 		'dashboard',
@@ -229,6 +270,14 @@ function redirect_list_widget_styles() {
 	);  
 }
 
+/**
+ * Add favoriting of links (uses sticky posts).
+ *
+ * @param array $actions An array of row action links.
+ * @param \WP_Post $post The post object.
+ *
+ * @return array
+ */
 function add_favorite_action_link( $actions, $post ) {
 	if ( 'redirect_rule' === $post->post_type ) {
 		$is_sticky = is_sticky( $post->ID );
@@ -241,6 +290,14 @@ function add_favorite_action_link( $actions, $post ) {
 	return $actions;
 }
 
+/**
+ * Get the URL for toggling a favorite.
+ *
+ * @param int $post_id The post ID.
+ * @param bool $make_sticky Whether to make the post sticky.
+ *
+ * @return string
+ */
 function get_favorite_toggle_url( $post_id, $make_sticky ) {
 	$action = $make_sticky ? 'add_favorite' : 'remove_favorite';
 	return add_query_arg(
@@ -253,6 +310,9 @@ function get_favorite_toggle_url( $post_id, $make_sticky ) {
 	);
 }
 
+/**
+ * Admin ajax callback for adding a favorite redirect.
+ */
 function add_favorite_redirect() {
 	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
 		wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
@@ -267,6 +327,9 @@ function add_favorite_redirect() {
 	}
 }
 
+/**
+ * Admin ajax callback for removing a favorite redirect.
+ */
 function remove_favorite_redirect() {
 	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
 		wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
@@ -281,14 +344,18 @@ function remove_favorite_redirect() {
 	}
 }
 
+/**
+ * Enqueue the redirect widget javascript.
+ */
 function enqueue_redirect_widget_script() {
-	// Check if we're on the dashboard
+	// Check if we're on the dashboard.
 	$current_screen = get_current_screen();
-	if ( $current_screen && 'dashboard' === $current_screen->base ) {
-		// Register a placeholder script to attach inline code to
-		wp_register_script( 'redirect-widget-inline', '', [], false, true );
 
-		// Localize script variables
+	if ( $current_screen && 'dashboard' === $current_screen->base ) {
+		// Register a placeholder script to attach inline code to.
+		wp_register_script( 'redirect-widget-inline', '', [], S3Q_REDIRECT_WIDGET_VERSION, true );
+
+		// Localize script variables.
 		wp_localize_script(
 			'redirect-widget-inline',
 			's3qRedirectWidget',
@@ -370,7 +437,7 @@ function enqueue_redirect_widget_script() {
             "
 		);
 
-		// Enqueue the script
+		// Enqueue the script.
 		wp_enqueue_script( 'redirect-widget-inline' );
 	}
 }
