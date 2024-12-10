@@ -25,7 +25,6 @@ function bootstrap() {
 	add_filter( 'srm_max_redirects', __NAMESPACE__ . '\\bump_max_redirects' );
 	add_filter( 'post_type_supports', __NAMESPACE__ . '\\enable_sticky_support_for_redirect_rule', 10, 2 );
 	add_filter( 'post_row_actions', __NAMESPACE__ . '\\add_favorite_action_link', 10, 2 );
-	
 }
 
 function bump_max_redirects() {
@@ -33,10 +32,10 @@ function bump_max_redirects() {
 }
 
 function enable_sticky_support_for_redirect_rule( $supports, $post_type ) {
-    if ( 'redirect_rule' === $post_type ) {
-        $supports[] = 'sticky';
-    }
-    return $supports;
+	if ( 'redirect_rule' === $post_type ) {
+		$supports[] = 'sticky';
+	}
+	return $supports;
 }
 
 function add_redirect_dashboard_widget() {
@@ -50,9 +49,9 @@ function add_redirect_dashboard_widget() {
 function add_redirect_list_dashboard_widget() {
 	wp_add_dashboard_widget(
 		'redirect_list_dashboard_widget',
-        esc_html__( 's3q Links', 's3q-redirect-widget' ),
-        __NAMESPACE__ . '\\render_redirect_list_dashboard_widget'
-    );
+		esc_html__( 's3q Links', 's3q-redirect-widget' ),
+		__NAMESPACE__ . '\\render_redirect_list_dashboard_widget'
+	);
 }
 
 function render_redirect_dashboard_widget() {
@@ -78,10 +77,10 @@ function render_redirect_dashboard_widget() {
 				echo '<div class="error"><p>' . esc_html__( 'Failed to add redirect.', 's3q-redirect-widget' ) . '</p></div>';
 			}
 		} else {
-			echo '<div class="error"><p>'. esc_html__( 'Both "Redirect From" and "Redirect To" fields are required.', 's3q-redirect-widget' ) . '</p></div>';
+			echo '<div class="error"><p>' . esc_html__( 'Both "Redirect From" and "Redirect To" fields are required.', 's3q-redirect-widget' ) . '</p></div>';
 		}
 	}
-?>
+	?>
 	<form method="post" action="">
 		<p>
 			<label for="redirect_from"><strong><?php esc_html_e( 'Redirect From:', 's3q-redirect-widget' ); ?></strong></label><br>
@@ -98,100 +97,100 @@ function render_redirect_dashboard_widget() {
 				<option value="301"><?php esc_html_e( '301 - Moved Permanently', 's3q-redirect-widget' ); ?></option>
 			</select>
 		</p>
-		<?php wp_nonce_field('add_redirect', 'redirect_nonce'); ?>
+		<?php wp_nonce_field( 'add_redirect', 'redirect_nonce' ); ?>
 		<p>
 			<button type="submit" class="button button-primary"><?php esc_html_e( 'Add Redirect', 's3q-redirect-widget' ); ?></button>
 		</p>
 	</form>
-<?php
+	<?php
 }
 
 function render_redirect_item( $post_id ) {
-    $redirect_from = get_post_meta( $post_id, '_redirect_rule_from', true );
-    $redirect_to = get_post_meta( $post_id, '_redirect_rule_to', true );
-    $is_sticky = is_sticky( $post_id );
+	$redirect_from = get_post_meta( $post_id, '_redirect_rule_from', true );
+	$redirect_to = get_post_meta( $post_id, '_redirect_rule_to', true );
+	$is_sticky = is_sticky( $post_id );
 
-    $full_url = home_url( $redirect_from );
-    $toggle_action = $is_sticky ? 'remove_favorite' : 'add_favorite';
-    $star_class = $is_sticky ? 'dashicons-star-filled' : 'dashicons-star-empty';
+	$full_url = home_url( $redirect_from );
+	$toggle_action = $is_sticky ? 'remove_favorite' : 'add_favorite';
+	$star_class = $is_sticky ? 'dashicons-star-filled' : 'dashicons-star-empty';
 
-    echo '<div class="redirect-item">';
-    echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '"></span>';
-    echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '">';
-    echo '<div class="redirect-to"><strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a></div>';
-    echo '</div>';
+	echo '<div class="redirect-item">';
+	echo '<span class="favorite-toggle dashicons ' . esc_attr( $star_class ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-action="' . esc_attr( $toggle_action ) . '"></span>';
+	echo '<input type="text" readonly value="' . esc_attr( $full_url ) . '">';
+	echo '<div class="redirect-to"><strong>' . esc_html__( 'Redirects To', 's3q-redirect-widget' ) . ':</strong> <a href="' . esc_url( $redirect_to ) . '" target="_blank">' . esc_html( $redirect_to ) . '</a></div>';
+	echo '</div>';
 }
 
 function render_redirect_list_dashboard_widget() {
-    // Number of redirects to display per page
-    $redirects_per_page = 10;
+	// Number of redirects to display per page
+	$redirects_per_page = 10;
 
-    // Current page
-    $current_page = isset( $_GET['redirect_page'] ) ? absint( $_GET['redirect_page'] ) : 1;
+	// Current page
+	$current_page = isset( $_GET['redirect_page'] ) ? absint( $_GET['redirect_page'] ) : 1;
 
-    // Get sticky redirects
-    $sticky_redirects = get_option( 'sticky_posts', [] );
+	// Get sticky redirects
+	$sticky_redirects = get_option( 'sticky_posts', [] );
 
-    // Display sticky (favorited) redirects
-    if ( $sticky_redirects ) {
-        $sticky_query_args = [
-            'post_type' => 'redirect_rule',
-            'post__in' => $sticky_redirects,
-            'posts_per_page' => -1,
-            'orderby' => 'post__in',
-            'post_status' => 'publish',
-        ];
+	// Display sticky (favorited) redirects
+	if ( $sticky_redirects ) {
+		$sticky_query_args = [
+			'post_type' => 'redirect_rule',
+			'post__in' => $sticky_redirects,
+			'posts_per_page' => -1,
+			'orderby' => 'post__in',
+			'post_status' => 'publish',
+		];
 
-        $sticky_query = new \WP_Query( $sticky_query_args );
+		$sticky_query = new \WP_Query( $sticky_query_args );
 
-        if ( $sticky_query->have_posts() ) {
-            while ( $sticky_query->have_posts() ) {
-                $sticky_query->the_post();
-                render_redirect_item( get_the_ID() );
-            }
-            wp_reset_postdata();
-        }
-    }
+		if ( $sticky_query->have_posts() ) {
+			while ( $sticky_query->have_posts() ) {
+				$sticky_query->the_post();
+				render_redirect_item( get_the_ID() );
+			}
+			wp_reset_postdata();
+		}
+	}
 
-    // Query non-sticky redirects
-    $query_args = [
-        'post_type' => 'redirect_rule',
-        'post__not_in' => $sticky_redirects,
-        'posts_per_page' => $redirects_per_page,
-        'paged' => $current_page,
-        'post_status' => 'publish',
-        'orderby' => 'date',
-        'order' => 'DESC',
-    ];
+	// Query non-sticky redirects
+	$query_args = [
+		'post_type' => 'redirect_rule',
+		'post__not_in' => $sticky_redirects,
+		'posts_per_page' => $redirects_per_page,
+		'paged' => $current_page,
+		'post_status' => 'publish',
+		'orderby' => 'date',
+		'order' => 'DESC',
+	];
 
-    $redirect_query = new \WP_Query( $query_args );
+	$redirect_query = new \WP_Query( $query_args );
 
-    if ( $redirect_query->have_posts() ) {
-        echo '<div class="redirect-list-widget">';
+	if ( $redirect_query->have_posts() ) {
+		echo '<div class="redirect-list-widget">';
 
-        while ( $redirect_query->have_posts() ) {
-            $redirect_query->the_post();
-            render_redirect_item( get_the_ID() );
-        }
+		while ( $redirect_query->have_posts() ) {
+			$redirect_query->the_post();
+			render_redirect_item( get_the_ID() );
+		}
 
-        echo '</div>';
+		echo '</div>';
 
-        // Pagination links
-        $total_pages = $redirect_query->max_num_pages;
-        if ( $total_pages > 1 ) {
-            echo '<div class="pagination">';
-            for ( $i = 1; $i <= $total_pages; $i++ ) {
-                $class = ( $i === $current_page ) ? 'current' : '';
-                $link  = add_query_arg( 'redirect_page', $i );
-                echo '<a href="' . esc_url( $link ) . '" class="' . esc_attr( $class ) . '" style="margin-right: 5px;">' . esc_html( $i ) . '</a>';
-            }
-            echo '</div>';
-        }
+		// Pagination links
+		$total_pages = $redirect_query->max_num_pages;
+		if ( $total_pages > 1 ) {
+			echo '<div class="pagination">';
+			for ( $i = 1; $i <= $total_pages; $i++ ) {
+				$class = ( $i === $current_page ) ? 'current' : '';
+				$link  = add_query_arg( 'redirect_page', $i );
+				echo '<a href="' . esc_url( $link ) . '" class="' . esc_attr( $class ) . '" style="margin-right: 5px;">' . esc_html( $i ) . '</a>';
+			}
+			echo '</div>';
+		}
 
-        wp_reset_postdata();
-    } else {
-        echo '<p>' . esc_html__( 'No redirects found.', 's3q-redirect-widget' ) . '</p>';
-    }
+		wp_reset_postdata();
+	} else {
+		echo '<p>' . esc_html__( 'No redirects found.', 's3q-redirect-widget' ) . '</p>';
+	}
 }
 
 function redirect_list_widget_styles() {
@@ -227,82 +226,82 @@ function redirect_list_widget_styles() {
 		}	
 		.redirect-item .favorite-toggle:hover { color: #135e96; }
 		#redirect_list_dashboard_widget { padding-right: 20px; }'
-	);	
+	);  
 }
 
 function add_favorite_action_link( $actions, $post ) {
-    if ( 'redirect_rule' === $post->post_type ) {
-        $is_sticky = is_sticky( $post->ID );
+	if ( 'redirect_rule' === $post->post_type ) {
+		$is_sticky = is_sticky( $post->ID );
 
-        $actions['favorite'] = $is_sticky
-            ? '<a href="' . esc_url( get_favorite_toggle_url( $post->ID, false ) ) . '">Unfavorite</a>'
-            : '<a href="' . esc_url( get_favorite_toggle_url( $post->ID, true ) ) . '">Favorite</a>';
-    }
+		$actions['favorite'] = $is_sticky
+			? '<a href="' . esc_url( get_favorite_toggle_url( $post->ID, false ) ) . '">Unfavorite</a>'
+			: '<a href="' . esc_url( get_favorite_toggle_url( $post->ID, true ) ) . '">Favorite</a>';
+	}
 
-    return $actions;
+	return $actions;
 }
 
 function get_favorite_toggle_url( $post_id, $make_sticky ) {
-    $action = $make_sticky ? 'add_favorite' : 'remove_favorite';
-    return add_query_arg(
-        [
-            'post_id' => $post_id,
-            'action'  => $action,
-            '_wpnonce' => wp_create_nonce( 'favorite_action' ),
-        ],
-        admin_url( 'admin-post.php' )
-    );
+	$action = $make_sticky ? 'add_favorite' : 'remove_favorite';
+	return add_query_arg(
+		[
+			'post_id' => $post_id,
+			'action'  => $action,
+			'_wpnonce' => wp_create_nonce( 'favorite_action' ),
+		],
+		admin_url( 'admin-post.php' )
+	);
 }
 
 function add_favorite_redirect() {
-    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
-        wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
-    }
+	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
+		wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
+	}
 
-    $post_id = absint( $_POST['post_id'] );
-    if ( current_user_can( 'edit_post', $post_id ) ) {
-        stick_post( $post_id );
-        wp_send_json_success( [ 'message' => 'Post favorited.' ] );
-    } else {
-        wp_send_json_error( [ 'message' => 'Permission denied.' ] );
-    }
+	$post_id = absint( $_POST['post_id'] );
+	if ( current_user_can( 'edit_post', $post_id ) ) {
+		stick_post( $post_id );
+		wp_send_json_success( [ 'message' => 'Post favorited.' ] );
+	} else {
+		wp_send_json_error( [ 'message' => 'Permission denied.' ] );
+	}
 }
 
 function remove_favorite_redirect() {
-    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
-        wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
-    }
+	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'favorite_action' ) ) {
+		wp_send_json_error( [ 'message' => 'Invalid nonce.' ] );
+	}
 
-    $post_id = absint( $_POST['post_id'] );
-    if ( current_user_can( 'edit_post', $post_id ) ) {
-        unstick_post( $post_id );
-        wp_send_json_success( [ 'message' => 'Post unfavorited.' ] );
-    } else {
-        wp_send_json_error( [ 'message' => 'Permission denied.' ] );
-    }
+	$post_id = absint( $_POST['post_id'] );
+	if ( current_user_can( 'edit_post', $post_id ) ) {
+		unstick_post( $post_id );
+		wp_send_json_success( [ 'message' => 'Post unfavorited.' ] );
+	} else {
+		wp_send_json_error( [ 'message' => 'Permission denied.' ] );
+	}
 }
 
 function enqueue_redirect_widget_script() {
-    // Check if we're on the dashboard
-    $current_screen = get_current_screen();
-    if ( $current_screen && 'dashboard' === $current_screen->base ) {
-        // Register a placeholder script to attach inline code to
-        wp_register_script( 'redirect-widget-inline', '', [], false, true );
+	// Check if we're on the dashboard
+	$current_screen = get_current_screen();
+	if ( $current_screen && 'dashboard' === $current_screen->base ) {
+		// Register a placeholder script to attach inline code to
+		wp_register_script( 'redirect-widget-inline', '', [], false, true );
 
-        // Localize script variables
-        wp_localize_script(
-            'redirect-widget-inline',
-            's3qRedirectWidget',
-            [
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'nonce'   => wp_create_nonce( 'favorite_action' ),
-            ]
-        );
+		// Localize script variables
+		wp_localize_script(
+			'redirect-widget-inline',
+			's3qRedirectWidget',
+			[
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'favorite_action' ),
+			]
+		);
 
-        // Inline JavaScript to select text on click and toggle favorites.
-        wp_add_inline_script(
-            'redirect-widget-inline',
-            "
+		// Inline JavaScript to select text on click and toggle favorites.
+		wp_add_inline_script(
+			'redirect-widget-inline',
+			"
 			document.addEventListener('DOMContentLoaded', function () {
 				// Function to select text in input
 				const handleInputClick = (event) => {
@@ -369,11 +368,11 @@ function enqueue_redirect_widget_script() {
 				}
 			});
             "
-        );
+		);
 
-        // Enqueue the script
-        wp_enqueue_script( 'redirect-widget-inline' );
-    }
+		// Enqueue the script
+		wp_enqueue_script( 'redirect-widget-inline' );
+	}
 }
 
 // Make it so.
