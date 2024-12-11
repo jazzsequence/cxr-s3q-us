@@ -12,7 +12,6 @@ $pantheon_yellow = '#FFDC28';
  * The full Slack Message API allows you to specify other channels and enhance the messagge further if you like: https://api.slack.com/docs/messages/builder.
  */
 $defaults = [
-	'slack_username' => 'Pantheon-Quicksilver',
 	'always_show_text' => false,
 	'slack_channel' => '#firehose',
 ];
@@ -121,7 +120,6 @@ $attachment = [
 
 _slack_notification(
 	$defaults['slack_channel'], 
-	$defaults['slack_username'], 
 	$text, 
 	$attachment, 
 	$defaults['always_show_text']
@@ -131,17 +129,15 @@ _slack_notification(
  * Send a notification to slack
  * 
  * @param string $channel The channel to send the notification to.
- * @param string $username The username to post as.
  * @param string $text The message to send.
  * @param array $attachment The attachment to include.
  * @param bool $always_show_text Whether to always show the text.
  */
-function _slack_notification( $channel, $username, $text, $attachment, $always_show_text = false ) {
+function _slack_notification( $channel, $text, $attachment, $always_show_text = false ) {
 	$slack_token = pantheon_get_secret( 'slack_deploybot_token' );
 	$attachment['fallback'] = $text;
 	$post = [
 		'channel' => $channel,
-		'username' => $username,
 		'attachments' => [ $attachment ],
 		'icon_emoji' => ':lightning_cloud:',
 		'text' => $always_show_text ? $text : '',
