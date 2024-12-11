@@ -124,23 +124,6 @@ switch ( $_POST['wf_type'] ) {
 
 $base_blocks = [
     [
-        'type' => 'divider',
-    ],
-    [
-        'type' => 'context',
-        'elements' => [
-            [
-                'type' => 'image',
-                'image_url' => "https://via.placeholder.com/15/$pantheon_yellow", // Simulates yellow sidebar
-                'alt_text' => 'Highlight',
-            ],
-            [
-                'type' => 'mrkdwn',
-                'text' => "Workflow Notification",
-            ],
-        ],
-    ],
-    [
         'type' => 'section',
         'fields' => [
             [
@@ -229,7 +212,14 @@ switch ($_POST['wf_type']) {
         break;
 }
 
-_slack_notification( $defaults['slack_channel'], $blocks );
+$attachments = [
+	[
+		'color' => $pantheon_yellow,
+		'blocks' => $blocks,
+	],
+];
+
+_slack_notification( $defaults['slack_channel'], $attachments );
 
 /**
  * Send a notification to slack
@@ -237,16 +227,12 @@ _slack_notification( $defaults['slack_channel'], $blocks );
  * @param string $channel The channel to send the notification to.
  * @param string $blocks The message to send.
  */
-function _slack_notification($channel, $blocks) {
+function _slack_notification($channel, $attachments) {
     $slack_token = pantheon_get_secret('slack_deploybot_token');
     $post = [
         'channel' => $channel,
-        'blocks' => $blocks,
-        'text' => "Workflow notification for Pantheon site", // Fallback text for accessibility
+        'attachments' => $attachments,
     ];
-
-    print("\n==== Payload Sent to Slack ====\n");
-    print_r($post);
 
     $payload = json_encode($post);
 
