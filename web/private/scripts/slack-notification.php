@@ -97,6 +97,21 @@ switch ($workflow_type) {
         $committer = trim(`git log -1 --pretty=%cn`);
         $hash = trim(`git log -1 --pretty=%h`);
         $message = trim(`git log -1 --pretty=%B`);
+		$remote_url = trim(`git remote get-url origin`);
+		$commit_url = null;
+		if (preg_match('/github\.com[:\/](.+?)\/(.+?)(\.git)?$/', $remote_url, $matches)) {
+			$repo_owner = $matches[1];
+			$repo_name = $matches[2];
+			$commit_url = "https://github.com/$repo_owner/$repo_name/commit/$commit_hash";
+		} elseif (preg_match('/gitlab\.com[:\/](.+?)\/(.+?)(\.git)?$/', $remote_url, $matches)) {
+			$repo_owner = $matches[1];
+			$repo_name = $matches[2];
+			$commit_url = "https://gitlab.com/$repo_owner/$repo_name/-/commit/$commit_hash";
+		}
+		
+		if ($commit_url) {
+			$hash = "<{$commit_url}|{$hash}>";
+		}
         $blocks[] = new Slack_Multi_Block([
             new Slack_Text("*Commit:* {$hash}"),
             new Slack_Text("*Committed by:* {$committer}"),
