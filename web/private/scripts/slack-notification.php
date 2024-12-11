@@ -60,6 +60,7 @@ class Slack_Context_Block {
 $icons = [
     'deploy' => ':rocket:',
     'sync_code' => ':computer:',
+    'sync_code_external_vcs' => ':computer:',
     'clear_cache' => ':broom:',
     'clone_database' => ':man-with-bunny-ears-partying:',
     'deploy_product' => ':magic_wand:',
@@ -123,27 +124,31 @@ switch ($workflow_type) {
 // Add a divider block at the end of the message
 $blocks[] = new Slack_Divider_Block();
 
+// Prepare attachments with yellow sidebar
+$attachments = [
+    [
+        'color' => $pantheon_yellow,
+        'blocks' => $blocks,
+    ],
+];
+
 // echo "Blocks:\n";
 // print_r( $blocks ); // DEBUG
 
-// actually post the notification
-_post_to_slack( $blocks );
+// Send the Slack notification
+_post_to_slack($attachments);
 
 /**
  * Send a notification to Slack
  *
- * @param array $blocks The array of blocks to include in the Slack message.
+ * @param array $attachments The array of attachments to include in the Slack message.
  */
-function _post_to_slack($blocks) {
-    /* Uncomment to debug JSON
-    echo "Blocks - Raw:\n"; print_r( $blocks ); echo "\n";
-    echo "Blocks - JSON:\n", json_encode( $blocks, JSON_PRETTY_PRINT ), "\n";
-    */
+function _post_to_slack($attachments) {
     $slack_token = pantheon_get_secret('slack_deploybot_token'); // Set the token name to match the secret you added to Pantheon.
 
     $post = [
         'channel' => '#firehose', // The Slack channel to post to.
-        'blocks' => $blocks,
+        'attachments' => $attachments,
     ];
 
     $payload = json_encode($post);
