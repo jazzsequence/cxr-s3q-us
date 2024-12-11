@@ -163,7 +163,7 @@ function _slack_notification( $channel, $username, $text, $attachment, $always_s
 	print( "\n==== Posting to Slack ====\n" );
 	$result = curl_exec( $ch );
 	$response = json_decode( $result, true );
-	print( "RESULT: $response\n" );
+	print( "RESULT: " . print_r( $response, true ) );
 	// Debug output.
 	if ( ! $response['ok'] ) {
 		print( 'Error: ' . $response['error'] . "\n" );
