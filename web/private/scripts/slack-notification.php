@@ -74,6 +74,10 @@ switch ( $_POST['wf_type'] ) {
 		break;
 
 	case 'sync_code':
+		$git_version = trim(`git --version`);
+		print("\n==== Debugging Git Availability ====\n");
+		print("Git Version: $git_version\n");
+
 		// Get the committer, hash, and message for the most recent commit.
 		$committer = `git log -1 --pretty=%cn`;
 		$email = `git log -1 --pretty=%ce`;
