@@ -124,6 +124,23 @@ switch ( $_POST['wf_type'] ) {
 
 $base_blocks = [
     [
+        'type' => 'divider',
+    ],
+    [
+        'type' => 'context',
+        'elements' => [
+            [
+                'type' => 'image',
+                'image_url' => "https://via.placeholder.com/15/$pantheon_yellow", // Simulates yellow sidebar
+                'alt_text' => 'Highlight',
+            ],
+            [
+                'type' => 'mrkdwn',
+                'text' => "Workflow Notification",
+            ],
+        ],
+    ],
+    [
         'type' => 'section',
         'fields' => [
             [
