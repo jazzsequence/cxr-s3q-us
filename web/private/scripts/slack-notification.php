@@ -148,6 +148,8 @@ function _slack_notification( $channel, $text, $attachment, $always_show_text = 
 		'text' => $always_show_text ? $text : '',
 	];
 
+	print( "\n==== Payload Sent to Slack ====\n" );
+	print_r( $post );	
 	$payload = json_encode( $post );
 
 	$ch = curl_init();
