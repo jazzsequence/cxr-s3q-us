@@ -25,3 +25,8 @@ workflows:
       - type: webphp
         description: Someone is clearing the cache again
         script: private/scripts/slack-notification.php
+  deploy_product:
+    after:
+      - description: "Install WordPress core"
+        script: private/scripts/wp-site-install.php
+        type: webphp        
