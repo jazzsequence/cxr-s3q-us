@@ -167,6 +167,7 @@ switch ($_POST['wf_type']) {
         break;
 
     case 'sync_code':
+	case 'sync_code_external_vcs':
         $committer = trim(`git log -1 --pretty=%cn`);
         $hash = trim(`git log -1 --pretty=%h`);
         $message = trim(`git log -1 --pretty=%B`);
