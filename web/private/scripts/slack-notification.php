@@ -122,65 +122,139 @@ switch ( $_POST['wf_type'] ) {
 		break;
 }
 
-$attachment = [
-	'fallback' => $text,
-	'pretext' => ( $_POST['wf_type'] == 'clear_cache' ) ? 'Caches cleared :construction:' : 'Deploying :rocket:',
-	'color' => $pantheon_yellow, // Can either be one of 'good', 'warning', 'danger', or any hex color code.
-	'fields' => $fields,
+$base_blocks = [
+    [
+        'type' => 'section',
+        'fields' => [
+            [
+                'type' => 'mrkdwn',
+                'text' => "*Site:*\n" . $_ENV['PANTHEON_SITE_NAME'],
+            ],
+            [
+                'type' => 'mrkdwn',
+                'text' => "*Environment:*\n<http://" . $_ENV['PANTHEON_ENVIRONMENT'] . "-" . $_ENV['PANTHEON_SITE_NAME'] . ".pantheonsite.io|" . $_ENV['PANTHEON_ENVIRONMENT'] . ">",
+            ],
+            [
+                'type' => 'mrkdwn',
+                'text' => "*By:*\n" . $_POST['user_email'],
+            ],
+            [
+                'type' => 'mrkdwn',
+                'text' => "*Workflow:*\n" . ucfirst($_POST['stage']) . " " . str_replace('_', ' ', $_POST['wf_type']),
+            ],
+        ],
+    ],
 ];
 
-_slack_notification(
-	$defaults['slack_channel'], 
-	$text, 
-	$attachment, 
-	$defaults['always_show_text']
-);
+$blocks = $base_blocks;
+
+switch ($_POST['wf_type']) {
+    case 'deploy':
+        $deploy_message = $_POST['deploy_message'];
+        $blocks[] = [
+            'type' => 'section',
+            'fields' => [
+                [
+                    'type' => 'mrkdwn',
+                    'text' => "*Details:*\nDeploy to the " . $_ENV['PANTHEON_ENVIRONMENT'] . " environment of " . $_ENV['PANTHEON_SITE_NAME'] . " by " . $_POST['user_email'] . " complete!",
+                ],
+                [
+                    'type' => 'mrkdwn',
+                    'text' => "*Deploy Note:*\n" . $deploy_message,
+                ],
+            ],
+        ];
+        break;
+
+    case 'sync_code':
+        $committer = trim(`git log -1 --pretty=%cn`);
+        $hash = trim(`git log -1 --pretty=%h`);
+        $message = trim(`git log -1 --pretty=%B`);
+        $blocks[] = [
+            'type' => 'section',
+            'fields' => [
+                [
+                    'type' => 'mrkdwn',
+                    'text' => "*Commit:*\n$hash",
+                ],
+                [
+                    'type' => 'mrkdwn',
+                    'text' => "*Commit Message:*\n$message",
+                ],
+            ],
+        ];
+        break;
+
+    case 'clear_cache':
+        $blocks[] = [
+            'type' => 'section',
+            'fields' => [
+                [
+                    'type' => 'mrkdwn',
+                    'text' => "*Action:*\nCaches cleared on <http://" . $_ENV['PANTHEON_ENVIRONMENT'] . "-" . $_ENV['PANTHEON_SITE_NAME'] . ".pantheonsite.io|" . $_ENV['PANTHEON_ENVIRONMENT'] . ">.",
+                ],
+            ],
+        ];
+        break;
+
+    default:
+        $description = $_POST['qs_description'] ?? 'No additional details provided.';
+        $blocks[] = [
+            'type' => 'section',
+            'fields' => [
+                [
+                    'type' => 'mrkdwn',
+                    'text' => "*Details:*\n" . $description,
+                ],
+            ],
+        ];
+        break;
+}
+
+_slack_notification( $defaults['slack_channel'], $blocks );
 
 /**
  * Send a notification to slack
  * 
  * @param string $channel The channel to send the notification to.
- * @param string $text The message to send.
- * @param array $attachment The attachment to include.
- * @param bool $always_show_text Whether to always show the text.
+ * @param string $blocks The message to send.
  */
-function _slack_notification( $channel, $text, $attachment, $always_show_text = false ) {
-	$slack_token = pantheon_get_secret( 'slack_deploybot_token' );
-	$attachment['fallback'] = $text;
-	$post = [
-		'channel' => $channel,
-		'attachments' => [ $attachment ],
-		'icon_emoji' => ':lightning_cloud:',
-		'text' => $always_show_text ? $text : '',
-	];
+function _slack_notification($channel, $blocks) {
+    $slack_token = pantheon_get_secret('slack_deploybot_token');
+    $post = [
+        'channel' => $channel,
+        'blocks' => $blocks,
+        'text' => "Workflow notification for Pantheon site", // Fallback text for accessibility
+    ];
 
-	print( "\n==== Payload Sent to Slack ====\n" );
-	print_r( $post );	
-	$payload = json_encode( $post );
+    print("\n==== Payload Sent to Slack ====\n");
+    print_r($post);
 
-	$ch = curl_init();
-	curl_setopt( $ch, CURLOPT_URL, 'https://slack.com/api/chat.postMessage' );
-	curl_setopt( $ch, CURLOPT_POST, 1 );
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-	curl_setopt( $ch, CURLOPT_TIMEOUT, 5 );
-	curl_setopt($ch, CURLOPT_HTTPHEADER, [
-		'Authorization: Bearer ' . $slack_token,
-		'Content-Type: application/json; charset=utf-8',
-	]);
-	curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
-	// Watch for messages with `terminus workflows watch --site=SITENAME`.
-	print( "\n==== Posting to Slack ====\n" );
-	$result = curl_exec( $ch );
-	$response = json_decode( $result, true );
-	print( "RESULT: " . print_r( $response, true ) );
-	// Debug output.
-	if ( ! $response['ok'] ) {
-		print( 'Error: ' . $response['error'] . "\n" );
-	} else {
-		print( "Message sent successfully!\n" );
-	}
-	// $payload_pretty = json_encode($post,JSON_PRETTY_PRINT); // Uncomment to debug JSON.
-	// print("JSON: $payload_pretty"); // Uncomment to Debug JSON.
-	print( "\n===== Post Complete! =====\n" );
-	curl_close( $ch );
+    $payload = json_encode($post);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://slack.com/api/chat.postMessage');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $slack_token,
+        'Content-Type: application/json; charset=utf-8',
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+
+    $result = curl_exec($ch);
+    $response = json_decode($result, true);
+
+    print("\n==== Posting to Slack ====\n");
+    print("RESULT: " . print_r($response, true));
+
+    if (!$response['ok']) {
+        print("Error: " . $response['error'] . "\n");
+        error_log("Slack API error: " . $response['error']);
+        return;
+    }
+
+    print("Message sent successfully!\n");
+    curl_close($ch);
 }
