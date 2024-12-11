@@ -45,7 +45,7 @@ switch ($_POST['wf_type']) {
             'type' => 'section',
             'text' => [
                 'type' => 'mrkdwn',
-                'text' => "**Deploying** :rocket:",
+                'text' => "*Deploying* :rocket:",
             ],
         ];
         $deploy_message = $_POST['deploy_message'];
@@ -70,7 +70,7 @@ switch ($_POST['wf_type']) {
             'type' => 'section',
             'text' => [
                 'type' => 'mrkdwn',
-                'text' => "**Syncing Code** :computer:",
+                'text' => "*Syncing Code* :computer:",
             ],
         ];
         $committer = trim(`git log -1 --pretty=%cn`);
@@ -96,7 +96,7 @@ switch ($_POST['wf_type']) {
             'type' => 'section',
             'text' => [
                 'type' => 'mrkdwn',
-                'text' => "**Clearing Cache** :broom:",
+                'text' => "*Clearing Cache* :broom:",
             ],
         ];
         $blocks[] = [
@@ -115,7 +115,7 @@ switch ($_POST['wf_type']) {
             'type' => 'section',
             'text' => [
                 'type' => 'mrkdwn',
-                'text' => "**Workflow Notification** :bell:",
+                'text' => "*Workflow Notification* :bell:",
             ],
         ];
         $description = $_POST['qs_description'] ?? 'No additional details provided.';
