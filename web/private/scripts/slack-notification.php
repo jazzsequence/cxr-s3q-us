@@ -108,7 +108,7 @@ switch ($workflow_type) {
 			$repo_name = $matches[2];
 			$commit_url = "https://gitlab.com/$repo_owner/$repo_name/-/commit/$commit_hash";
 		}
-		
+		print_r($commit_url);
 		if ($commit_url) {
 			$hash = "<{$commit_url}|{$hash}>";
 		}
@@ -159,9 +159,6 @@ _post_to_slack($attachments);
  * @param array $attachments The array of attachments to include in the Slack message.
  */
 function _post_to_slack($attachments) {
-    /* Uncomment to debug JSON */
-    echo "Blocks - Raw:\n"; print_r( $attachments[1]['blocks'] ); echo "\n";
-    echo "Blocks - JSON:\n", json_encode( $attachments[1]['blocks'], JSON_PRETTY_PRINT ), "\n";
     echo "Attachments - Raw:\n"; print_r( $attachments ); echo "\n";
 
     $slack_token = pantheon_get_secret('slack_deploybot_token'); // Set the token name to match the secret you added to Pantheon.
