@@ -133,7 +133,7 @@ $attachments = [
 ];
 
 // echo "Blocks:\n";
-// print_r( $blocks ); // DEBUG
+print_r( $blocks ); // DEBUG
 
 // Send the Slack notification
 _post_to_slack($attachments);
@@ -144,6 +144,11 @@ _post_to_slack($attachments);
  * @param array $attachments The array of attachments to include in the Slack message.
  */
 function _post_to_slack($attachments) {
+    /* Uncomment to debug JSON */
+    echo "Blocks - Raw:\n"; print_r( $attachments['blocks'] ); echo "\n";
+    echo "Blocks - JSON:\n", json_encode( $attachments['blocks'], JSON_PRETTY_PRINT ), "\n";
+    echo "Attachments - Raw:\n"; print_r( $attachments ); echo "\n";
+
     $slack_token = pantheon_get_secret('slack_deploybot_token'); // Set the token name to match the secret you added to Pantheon.
 
     $post = [
