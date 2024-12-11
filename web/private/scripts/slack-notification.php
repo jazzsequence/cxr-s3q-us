@@ -156,7 +156,7 @@ function _slack_notification( $channel, $username, $text, $attachment, $always_s
 	curl_setopt( $ch, CURLOPT_TIMEOUT, 5 );
 	curl_setopt($ch, CURLOPT_HTTPHEADER, [
 		'Authorization: Bearer ' . $slack_token,
-		'Content-Type: application/json',
+		'Content-Type: application/json; charset=utf-8',
 	]);
 	curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
 	// Watch for messages with `terminus workflows watch --site=SITENAME`.
