@@ -7,9 +7,6 @@
 $pantheon_yellow = '#FFDC28';
 $slack_channel = '#firehose';
 
-print("\n==== Debugging Workflow Type ====\n");
-print("wf_type: " . $_POST['wf_type'] . "\n");
-
 /**
  * Build an array of fields to be rendered with Slack Attachments as a table using markdown and block-based sections.
  */
