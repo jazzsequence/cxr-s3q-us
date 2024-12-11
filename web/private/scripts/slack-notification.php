@@ -108,6 +108,7 @@ switch ($workflow_type) {
 			$repo_name = $matches[2];
 			$commit_url = "https://gitlab.com/$repo_owner/$repo_name/-/commit/$commit_hash";
 		}
+		echo "Commit URL and Remote url:\n";
 		print_r($commit_url, $remote_url);
 		if ($commit_url) {
 			$hash = "<{$commit_url}|{$hash}>";
