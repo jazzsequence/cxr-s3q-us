@@ -41,6 +41,13 @@ $blocks = $base_blocks;
  */
 switch ($_POST['wf_type']) {
     case 'deploy':
+        $blocks[] = [
+            'type' => 'section',
+            'text' => [
+                'type' => 'mrkdwn',
+                'text' => "Deploying :rocket:",
+            ],
+        ];
         $deploy_message = $_POST['deploy_message'];
         $blocks[] = [
             'type' => 'section',
@@ -58,7 +65,14 @@ switch ($_POST['wf_type']) {
         break;
 
     case 'sync_code':
-	case 'sync_code_external_vcs':
+    case 'sync_code_external_vcs':
+        $blocks[] = [
+            'type' => 'section',
+            'text' => [
+                'type' => 'mrkdwn',
+                'text' => "Syncing Code :computer:",
+            ],
+        ];
         $committer = trim(`git log -1 --pretty=%cn`);
         $hash = trim(`git log -1 --pretty=%h`);
         $message = trim(`git log -1 --pretty=%B`);
@@ -80,6 +94,13 @@ switch ($_POST['wf_type']) {
     case 'clear_cache':
         $blocks[] = [
             'type' => 'section',
+            'text' => [
+                'type' => 'mrkdwn',
+                'text' => "Clearing Cache :broom:",
+            ],
+        ];
+        $blocks[] = [
+            'type' => 'section',
             'fields' => [
                 [
                     'type' => 'mrkdwn',
@@ -90,6 +111,13 @@ switch ($_POST['wf_type']) {
         break;
 
     default:
+        $blocks[] = [
+            'type' => 'section',
+            'text' => [
+                'type' => 'mrkdwn',
+                'text' => "Workflow Notification :bell:",
+            ],
+        ];
         $description = $_POST['qs_description'] ?? 'No additional details provided.';
         $blocks[] = [
             'type' => 'section',
