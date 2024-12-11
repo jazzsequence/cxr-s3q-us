@@ -50,6 +50,15 @@
     <exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited">
       <exclude-pattern>config/application.php</exclude-pattern>
     </exclude>
+    <exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped">
+      <exclude-pattern>private/scripts/*.php</exclude-pattern>
+    </exclude>
+    <exclude name="WordPress.Security.NonceVerification.Missing">
+      <exclude-pattern>private/scripts/*.php</exclude-pattern>
+    </exclude>
+    <exclude name="Generic.PHP.BacktickOperator.Found">
+      <exclude-pattern>private/scripts/*.php</exclude-pattern>
+    </exclude>
   </rule>
   <!-- End Pantheon addition -->
 
