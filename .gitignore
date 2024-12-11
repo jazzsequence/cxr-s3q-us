@@ -117,6 +117,7 @@ sitemap.xml.gz
 !web/private/
 web/private/*
 !web/private/config/
+!web/private/scripts/
 
 # Autoloader
 # This file loads the Composer autoloader and is moved to the root directory by
