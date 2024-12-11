@@ -50,6 +50,8 @@ $fields = [
 /**
  * Customize the message based on the workflow type.  Note that slack_notification.php must appear in your pantheon.yml for each workflow type you wish to send notifications on.
  */
+print("\n==== Debugging Workflow Type ====\n");
+print("wf_type: " . $_POST['wf_type'] . "\n");
 switch ( $_POST['wf_type'] ) {
 	case 'deploy':
 		// Find out what tag we are on and get the annotation.
