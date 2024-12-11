@@ -78,7 +78,12 @@ switch ( $_POST['wf_type'] ) {
 		$committer = `git log -1 --pretty=%cn`;
 		$email = `git log -1 --pretty=%ce`;
 		$message = `git log -1 --pretty=%B`;
-		$hash = `git log -1 --pretty=%h`;
+		$hash = `git log -1 --pretty=%h`;		
+		print("\n==== Debugging git log ====\n");
+		print("Committer: $committer\n");
+		print("Hash: $hash\n");
+		print("Message: $message\n");
+		
 
 		// Prepare the slack payload as per: https://api.slack.com/incoming-webhooks.
 		$text = 'Code sync to the ' . $_ENV['PANTHEON_ENVIRONMENT'] . ' environment of ' . $_ENV['PANTHEON_SITE_NAME'] . ' by ' . $_POST['user_email'] . "!\n";
