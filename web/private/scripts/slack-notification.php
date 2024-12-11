@@ -5,179 +5,170 @@
  */
 
 $pantheon_yellow = '#FFDC28';
-$slack_channel = '#firehose';
+$slack_channel = '#firehose'; // The Slack channel to post to.
 
 /**
- * Build an array of fields to be rendered with Slack Attachments as a table using markdown and block-based sections.
+ * class Slack_Text - a basic { type, text } object to embed in a block
  */
-$base_blocks = [
-    [
-        'type' => 'section',
-        'fields' => [
-            [
-                'type' => 'mrkdwn',
-                'text' => "*Site:*\n" . $_ENV['PANTHEON_SITE_NAME'],
-            ],
-            [
-                'type' => 'mrkdwn',
-                'text' => "*Environment:*\n<http://" . $_ENV['PANTHEON_ENVIRONMENT'] . "-" . $_ENV['PANTHEON_SITE_NAME'] . ".pantheonsite.io|" . $_ENV['PANTHEON_ENVIRONMENT'] . ">",
-            ],
-            [
-                'type' => 'mrkdwn',
-                'text' => "*By:*\n" . $_POST['user_email'],
-            ],
-            [
-                'type' => 'mrkdwn',
-                'text' => "*Workflow:*\n" . ucfirst($_POST['stage']) . " " . str_replace('_', ' ', $_POST['wf_type']),
-            ],
-        ],
-    ],
+class Slack_Text {
+    public $type; // 'mrkdwn' or 'plain_text'
+    public $text;
+    public function __construct(string $text = '', string $type = 'mrkdwn') {
+        $this->type = $type;
+        $this->text = $text;
+    }
+}
+/**
+ * class Slack_Simple_Block - a single column block of content
+ */
+class Slack_Simple_Block {
+    public $type; // 'section' or 'header'
+    public $text; // Slack_Text
+    public function __construct(Slack_Text $text, string $type = 'section') {
+        $this->type = $type;
+        $this->text = $text;
+    }
+}
+/**
+ * class Slack_Multi_Block - a multi-column block of content (very likely 2 cols)
+ */
+class Slack_Multi_Block {
+    public $type = 'section';
+    public $fields; // array of Slack_Text
+    public function __construct(array $fields) {
+        $this->fields = $fields;
+    }
+}
+/**
+ * class Slack_Divider_Block - a divider block
+ */
+class Slack_Divider_Block {
+    public $type = 'divider';
+}
+/**
+ * class Slack_Context_Block - a context block
+ */
+class Slack_Context_Block {
+    public $type = 'context';
+    public $elements; // array of Slack_Text
+    public function __construct(array $elements) {
+        $this->elements = $elements;
+    }
+}
+
+// some festive icons for the header based on the workflow we're running
+$icons = [
+    'deploy' => ':rocket:',
+    'sync_code' => ':computer:',
+    'clear_cache' => ':broom:',
+    'clone_database' => ':man-with-bunny-ears-partying:',
+    'deploy_product' => ':magic_wand:',
+    'create_cloud_development_environment' => ':lightning_cloud:',
 ];
 
-$blocks = $base_blocks;
-printf($_POST['wf_type']);
-/**
- * Customize the message based on the workflow type.  Note that slack_notification.php must appear in your pantheon.yml for each workflow type you wish to send notifications on.
- */
-switch ($_POST['wf_type']) {
+// Extract workflow information
+$workflow_type = $_POST['wf_type'];
+$workflow_name = ucfirst(str_replace('_', ' ', $workflow_type));
+printf("Workflow type: %s\n", $workflow_type);
+$site_name = $_ENV['PANTHEON_SITE_NAME'];
+$environment = $_ENV['PANTHEON_ENVIRONMENT'];
+
+// Create base blocks for all workflows
+$blocks = [
+    new Slack_Simple_Block(new Slack_Text("{$icons[$workflow_type]} {$workflow_name}", 'plain_text'), 'header'),
+    new Slack_Context_Block([
+        new Slack_Text("*Site:* <https://dashboard.pantheon.io/sites/" . PANTHEON_SITE . "#{$environment}/code|{$site_name}>"),
+        new Slack_Text("*Environment:* " . strtoupper($environment)),
+        new Slack_Text("*Initiated by:* {$_POST['user_email']}"),
+    ]),
+];
+
+// Add custom blocks based on the workflow type. Note that slack_notification.php must appear in your pantheon.yml for each workflow type you wish to send notifications on.
+switch ($workflow_type) {
     case 'deploy':
-        $blocks[] = [
-            'type' => 'section',
-            'text' => [
-                'type' => 'mrkdwn',
-                'text' => "*Deploying* :rocket:",
-            ],
-        ];
         $deploy_message = $_POST['deploy_message'];
-        $blocks[] = [
-            'type' => 'section',
-            'fields' => [
-                [
-                    'type' => 'mrkdwn',
-                    'text' => "*Details:*\nDeploy to the " . $_ENV['PANTHEON_ENVIRONMENT'] . " environment of " . $_ENV['PANTHEON_SITE_NAME'] . " by " . $_POST['user_email'] . " complete!",
-                ],
-                [
-                    'type' => 'mrkdwn',
-                    'text' => "*Deploy Note:*\n" . $deploy_message,
-                ],
-            ],
-        ];
+        $blocks[] = new Slack_Simple_Block(new Slack_Text("*Deploy Note:*\n{$deploy_message}"));
         break;
 
     case 'sync_code':
     case 'sync_code_external_vcs':
-        $blocks[] = [
-            'type' => 'section',
-            'text' => [
-                'type' => 'mrkdwn',
-                'text' => "*Syncing Code* :computer:",
-            ],
-        ];
+        // Get the time, committer, and message for the most recent commit
         $committer = trim(`git log -1 --pretty=%cn`);
         $hash = trim(`git log -1 --pretty=%h`);
         $message = trim(`git log -1 --pretty=%B`);
-        $blocks[] = [
-            'type' => 'section',
-            'fields' => [
-                [
-                    'type' => 'mrkdwn',
-                    'text' => "*Commit:*\n$hash",
-                ],
-                [
-                    'type' => 'mrkdwn',
-                    'text' => "*Commit Message:*\n$message",
-                ],
-            ],
-        ];
+        $blocks[] = new Slack_Multi_Block([
+            new Slack_Text("*Commit:* {$hash}"),
+            new Slack_Text("*Committed by:* {$committer}"),
+        ]);
+        $blocks[] = new Slack_Simple_Block(new Slack_Text("*Commit Message:*\n{$message}"));
         break;
 
     case 'clear_cache':
-        $blocks[] = [
-            'type' => 'section',
-            'text' => [
-                'type' => 'mrkdwn',
-                'text' => "*Clearing Cache* :broom:",
-            ],
-        ];
-        $blocks[] = [
-            'type' => 'section',
-            'fields' => [
-                [
-                    'type' => 'mrkdwn',
-                    'text' => "*Action:*\nCaches cleared on <http://" . $_ENV['PANTHEON_ENVIRONMENT'] . "-" . $_ENV['PANTHEON_SITE_NAME'] . ".pantheonsite.io|" . $_ENV['PANTHEON_ENVIRONMENT'] . ">.",
-                ],
-            ],
-        ];
+        $blocks[] = new Slack_Simple_Block(new Slack_Text("*Action:*\nCaches cleared on <http://{$environment}-{$site_name}.pantheonsite.io|{$environment}>."));
+        break;
+
+    case 'clone_database':
+        $blocks[] = new Slack_Multi_Block([
+            new Slack_Text("*Cloned from:* {$_POST['from_environment']}"),
+            new Slack_Text("*Cloned to:* {$environment}"),
+        ]);
         break;
 
     default:
-        $blocks[] = [
-            'type' => 'section',
-            'text' => [
-                'type' => 'mrkdwn',
-                'text' => "*Workflow Notification* :bell:",
-            ],
-        ];
         $description = $_POST['qs_description'] ?? 'No additional details provided.';
-        $blocks[] = [
-            'type' => 'section',
-            'fields' => [
-                [
-                    'type' => 'mrkdwn',
-                    'text' => "*Details:*\n" . $description,
-                ],
-            ],
-        ];
+        $blocks[] = new Slack_Simple_Block(new Slack_Text("*Description:*\n{$description}"));
         break;
 }
 
-$attachments = [
-	[
-		'color' => $pantheon_yellow,
-		'blocks' => $blocks,
-	],
-];
+// Add a divider block at the end of the message
+$blocks[] = new Slack_Divider_Block();
 
-_slack_notification( $slack_channel, $attachments );
+// echo "Blocks:\n";
+// print_r( $blocks ); // DEBUG
+
+// actually post the notification
+_post_to_slack( $blocks );
 
 /**
- * Send a notification to slack
- * 
- * @param string $channel The channel to send the notification to.
- * @param string $blocks The message to send.
+ * Send a notification to Slack
+ *
+ * @param array $blocks The array of blocks to include in the Slack message.
  */
-function _slack_notification($channel, $attachments) {
-    $slack_token = pantheon_get_secret('slack_deploybot_token');
+function _post_to_slack($blocks) {
+    /* Uncomment to debug JSON
+    echo "Blocks - Raw:\n"; print_r( $blocks ); echo "\n";
+    echo "Blocks - JSON:\n", json_encode( $blocks, JSON_PRETTY_PRINT ), "\n";
+    */
+    $slack_token = pantheon_get_secret('slack_deploybot_token'); // Set the token name to match the secret you added to Pantheon.
+
     $post = [
-        'channel' => $channel,
-        'attachments' => $attachments,
+        'channel' => '#firehose', // The Slack channel to post to.
+        'blocks' => $blocks,
     ];
 
     $payload = json_encode($post);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://slack.com/api/chat.postMessage');
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Authorization: Bearer ' . $slack_token,
         'Content-Type: application/json; charset=utf-8',
     ]);
+    curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-
-    $result = curl_exec($ch);
-    $response = json_decode($result, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 
     print("\n==== Posting to Slack ====\n");
-    print("RESULT: " . print_r($response, true));
+    $result = curl_exec($ch);
+    $response = json_decode($result, true);
 
     if (!$response['ok']) {
         print("Error: " . $response['error'] . "\n");
         error_log("Slack API error: " . $response['error']);
-        return;
+    } else {
+        print("Message sent successfully!\n");
     }
 
-    print("Message sent successfully!\n");
     curl_close($ch);
 }
