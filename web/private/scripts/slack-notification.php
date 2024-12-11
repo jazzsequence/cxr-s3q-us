@@ -35,7 +35,7 @@ $base_blocks = [
 ];
 
 $blocks = $base_blocks;
-
+printf($_POST['wf_type']);
 /**
  * Customize the message based on the workflow type.  Note that slack_notification.php must appear in your pantheon.yml for each workflow type you wish to send notifications on.
  */
