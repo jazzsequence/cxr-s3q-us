@@ -6,6 +6,7 @@
 
 $pantheon_yellow = '#FFDC28';
 $slack_channel = '#firehose'; // The Slack channel to post to.
+$type = 'attachments'; // 'attachments' or 'blocks'. Determines the Slack API to use. Blocks is more modern (our attachment has blocks embedded in it), but Attachments allows the distinct sidebar color.
 
 /**
  * A basic { type, text } object to embed in a block
@@ -141,7 +142,7 @@ switch ($workflow_type) {
 // Add a divider block at the end of the message
 $blocks[] = _create_divider_block();
 
-// Prepare attachments with yellow sidebar
+// Prepare Slack POST content as an attachment with yellow sidebar.
 $attachments = [
 	[
 		'color' => $pantheon_yellow,
@@ -149,32 +150,36 @@ $attachments = [
 	],
 ];
 
+// Uncomment to debug the blocks.
 // echo "Blocks:\n";
-print_r( $blocks ); // DEBUG
+// print_r( $blocks );
 
 // Send the Slack notification
-_post_to_slack($attachments);
+_post_to_slack();
 
 /**
  * Send a notification to Slack
- *
- * @param array $attachments The array of attachments to include in the Slack message.
- * @param string $slack_channel The channel to send the message to (defined at the top of the script).
  */
-function _post_to_slack($attachments) {
-	global $slack_channel;
+function _post_to_slack() {
+	global $slack_channel, $type, $attachments, $blocks;
 	// Uncomment the following line to debug the attachments array.
-	echo "Attachments - Raw:\n"; print_r( $attachments ); echo "\n";
+	// echo "Attachments:\n"; print_r( $attachments ); echo "\n";
 
 	$slack_token = pantheon_get_secret('slack_deploybot_token'); // Set the token name to match the secret you added to Pantheon.
 
-	$post = [
-		'channel' => $slack_channel,
-		'attachments' => $attachments,
-	];
+	$post['channel'] = ['channel' => $slack_channel];
 
-	// Debug the payload.
-	echo "Payload: " . json_encode($post, JSON_PRETTY_PRINT) . "\n";
+	// Check the type and adjust the payload accordingly.
+	if ( $type === 'attachments' ) {
+		$post['attachments'] = $attachments;
+	} elseif ( $type === 'blocks' ) {
+		$post['blocks'] = $blocks;
+	} else {
+		throw new InvalidArgumentException("Unsupported type: $type");
+	}
+
+	// Uncomment to debug the payload.
+	// echo "Payload: " . json_encode($post, JSON_PRETTY_PRINT) . "\n";
 	$payload = json_encode($post);
 
 	$ch = curl_init();
