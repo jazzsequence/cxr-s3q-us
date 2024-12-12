@@ -6,7 +6,7 @@
 
 $pantheon_yellow = '#FFDC28';
 $slack_channel = '#firehose'; // The Slack channel to post to.
-$type = 'attachments'; // 'attachments' or 'blocks'. Determines the Slack API to use. Blocks is more modern (our attachment has blocks embedded in it), but Attachments allows the distinct sidebar color.
+$type = 'blocks'; // 'attachments' or 'blocks'. Determines the Slack API to use. Blocks is more modern (our attachment has blocks embedded in it), but Attachments allows the distinct sidebar color.
 
 /**
  * A basic { type, text } object to embed in a block
