@@ -167,7 +167,7 @@ function _post_to_slack() {
 
 	$slack_token = pantheon_get_secret('slack_deploybot_token'); // Set the token name to match the secret you added to Pantheon.
 
-	$post['channel'] = ['channel' => $slack_channel];
+	$post['channel'] = $slack_channel;
 
 	// Check the type and adjust the payload accordingly.
 	if ( $type === 'attachments' ) {
