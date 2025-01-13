@@ -11,6 +11,8 @@
 namespace s3q\Shortener;
 
 use WP_Error;
+use s3q\LimitLogins;
+
 
 /**
  * Bootstrap the plugin
@@ -191,6 +193,12 @@ function add_rewrite_rules() {
  * @uses pantheon_get_secret()
  */
 function handle_public_shorten_url() {
+	// Redirect to login page if it's not me.
+	if ( ! LimitLogins\it_me() ) {
+		wp_redirect( wp_login_url() );
+		exit;
+	}
+
 	if ( get_query_var( 'shorten_url' ) === '1' ) {
 		$to = esc_url_raw( $_GET['to'] ?? '' );
 		$from = sanitize_text_field( $_GET['from'] ?? '' );
