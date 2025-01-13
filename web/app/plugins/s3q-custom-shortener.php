@@ -2,7 +2,7 @@
 /**
  * Plugin Name: s3q.us Custom Shortener
  * Description: Allow links to be shortened from off of s3q.us via bookmarklet.
- * Version: 1.0
+ * Version: 1.1
  * Author: Chris Reynolds
  * Author URI: https://chrisreynolds.io
  * License: MIT
