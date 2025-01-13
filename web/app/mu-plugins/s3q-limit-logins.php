@@ -16,7 +16,7 @@ namespace s3q\LimitLogins;
  * This function sets up the necessary hooks and filters to limit login attempts.
  */
 function bootstrap() {
-	add_filter( 'authenticate', __NAMESPACE__ . '\\restrict_logins', 30, 3 );
+	add_filter( 'authenticate', __NAMESPACE__ . '\\restrict_logins', 30 );
 }
 
 /**
@@ -55,7 +55,7 @@ function it_me() {
  * @param string $password Password used for login.
  * @return WP_User|WP_Error The authenticated user object, or WP_Error on failure.
  */
-function restrict_logins( $user, $username, $password ) {
+function restrict_logins( $user ) {
     // Check if the user is valid.
     if ( ! is_wp_error( $user ) ) {
         // If the user is not user ID 1, deny login.
