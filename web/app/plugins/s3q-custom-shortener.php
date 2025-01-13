@@ -42,6 +42,10 @@ function add_bookmarklet_menu_page() {
  * @uses pantheon_get_secret()
  */
 function render_bookmarklet_page() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You are not authorized to view this page.', 's3q-shortener' ) );
+	}
+
 	$site_url = home_url();
 	$api_key = pantheon_get_secret( 'bookmarklet_api' );
 	$public_endpoint = "{$site_url}/shorten-url";
