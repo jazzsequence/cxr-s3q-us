@@ -197,7 +197,19 @@ function handle_public_shorten_url() {
 
 	// Redirect to login page if it's not me.
 	if ( ! LimitLogins\it_me() ) {
-		wp_redirect( wp_login_url() );
+		echo '<div class="login-form-container">';
+		echo '<h2>' . esc_html__( 'Login to Access URL Shortener', 's3q-shortener' ) . '</h2>';
+		wp_login_form( [
+			'redirect' => home_url( '/shorten-url' ), // Redirect back to the same page after login.
+			'label_username' => __( 'Username or Email', 's3q-shortener' ),
+			'label_password' => __( 'Password', 's3q-shortener' ),
+			'label_remember' => __( 'Remember Me', 's3q-shortener' ),
+			'label_log_in'   => __( 'Log In', 's3q-shortener' ),
+			'remember'       => true,
+		] );
+		echo '</div>';
+
+		get_footer(); // Includes the WordPress theme footer.
 		exit;
 	}
 
