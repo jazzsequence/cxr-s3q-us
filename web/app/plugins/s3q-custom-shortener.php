@@ -193,6 +193,8 @@ function add_rewrite_rules() {
  * @uses pantheon_get_secret()
  */
 function handle_public_shorten_url() {
+	get_header();
+
 	// Redirect to login page if it's not me.
 	if ( ! LimitLogins\it_me() ) {
 		wp_redirect( wp_login_url() );
