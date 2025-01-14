@@ -52,13 +52,25 @@ function it_me( $user_id = null ) {
  * @return WP_User|WP_Error The authenticated user object, or WP_Error on failure.
  */
 function restrict_logins( $user ) {
+	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		return $user; // Skip cron jobs.
+	}
+
+	if ( ! did_action( 'wp_login' ) ) {
+		return $user; // Skip non-login actions.
+	}
+
 	// Allow logout actions to bypass the filter.
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		return $user;
 	}
 
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		return $user; // Skip REST API requests.
+	}
+
 	// If login failed for other reasons, let the error pass through.
-	if ( is_wp_error( $user ) ) {
+	if ( is_wp_error( $user ) && it_me() ) {
 		return $user;
 	}
 
