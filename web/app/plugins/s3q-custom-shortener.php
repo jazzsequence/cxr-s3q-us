@@ -193,6 +193,11 @@ function add_rewrite_rules() {
  * @uses pantheon_get_secret()
  */
 function handle_public_shorten_url() {
+	// Check if the current request is for the shorten-url page.
+	if ( get_query_var( 'shorten_url' ) !== '1' ) {
+		return; // Do nothing if it's not the shorten-url page.
+	}
+
 	get_header();
 
 	// Redirect to login page if it's not me.
