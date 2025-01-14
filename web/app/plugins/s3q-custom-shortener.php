@@ -197,15 +197,30 @@ function handle_public_shorten_url() {
 
 	// Redirect to login page if it's not me.
 	if ( ! LimitLogins\it_me() ) {
+		// Retain and sanitize original query parameters.
+		$current_url = home_url( '/shorten-url' );
+		$query_params = [];
+
+		foreach ( $_GET as $key => $value ) {
+			if ( ! empty( $value ) ) {
+				$query_params[ sanitize_key( $key ) ] = sanitize_text_field( $value );
+			}
+		}
+
+		if ( ! empty( $query_params ) ) {
+			$current_url = add_query_arg( $query_params, $current_url );
+		}
+
+		// Display the login form with a redirect back to the original URL.
 		echo '<div class="login-form-container">';
 		echo '<h2>' . esc_html__( 'Login to Access URL Shortener', 's3q-shortener' ) . '</h2>';
 		wp_login_form( [
-			'redirect' => home_url( '/shorten-url' ), // Redirect back to the same page after login.
+			'redirect' => esc_url( $current_url ), // Redirect back with original parameters.
 			'label_username' => __( 'Username or Email', 's3q-shortener' ),
 			'label_password' => __( 'Password', 's3q-shortener' ),
 			'label_remember' => __( 'Remember Me', 's3q-shortener' ),
-			'label_log_in'   => __( 'Log In', 's3q-shortener' ),
-			'remember'       => true,
+			'label_log_in' => __( 'Log In', 's3q-shortener' ),
+			'remember' => true,
 		] );
 		echo '</div>';
 
