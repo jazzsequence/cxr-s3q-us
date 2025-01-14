@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Limit logins
- * Description: Block logins from any account that's not me.
- * Version: 1.0
+ * Plugin Name: Limit Logins
+ * Description: Block logins from any account that's not User ID 1.
+ * Version: 1.1
  * Author: Chris Reynolds
  * Author URI: https://chrisreynolds.io
  * License: MIT
@@ -12,43 +12,25 @@ namespace s3q\LimitLogins;
 
 /**
  * Initializes the S3Q Limit Logins plugin.
- *
- * This function sets up the necessary hooks and filters to limit login attempts.
  */
 function bootstrap() {
 	add_filter( 'authenticate', __NAMESPACE__ . '\\restrict_logins', 30 );
 }
 
 /**
- * Check if the current user is me.
- * 
- * @return bool true if it me, false if it not me.
+ * Check if a given user is the allowed user (ID 1).
+ *
+ * @param int|null $user_id The user ID to check. If null, checks the current logged-in user.
+ * @return bool True if the user is User ID 1, false otherwise.
  */
-function it_me() {
-	$current_user = get_current_user_id();
-	var_dump( $current_user );
-	if ( ! $current_user ) {
-		printf( 'current user empty' );
-		return false;
+function it_me( $user_id = null ) {
+	// Use current logged-in user if no ID is passed.
+	if ( is_null( $user_id ) ) {
+		$user_id = get_current_user_id();
 	}
 
-	if ( ! is_user_logged_in( $current_user ) ) {
-		printf( 'not logged in' );
-		return false;
-	}
-
-	if ( ! is_user_admin( $current_user ) ) {
-		printf( 'not admin' );
-		return false;
-	}
-
-	if ( $current_user !== 1 ) {
-		printf( 'not user 1' );
-		return false;
-	}
-
-	// It me.
-	return true;
+	// Return true if the user ID is 1 (admin user).
+	return (int) $user_id === 1;
 }
 
 /**
@@ -60,17 +42,20 @@ function it_me() {
  * @return WP_User|WP_Error The authenticated user object, or WP_Error on failure.
  */
 function restrict_logins( $user ) {
-	// Check if the user is valid.
-	if ( ! is_wp_error( $user ) ) {
-		// If the user is not user ID 1, deny login.
-		if ( ! it_me() ) {
-			return new \WP_Error(
-				'access_denied',
-				__( 'Login is restricted to the site administrator.', 'limit-logins' )
-			);
-		}
+	// If login failed for other reasons, let the error pass through.
+	if ( is_wp_error( $user ) ) {
+		return $user;
 	}
 
+	// Check if the authenticated user is User ID 1.
+	if ( ! it_me( $user->ID ) ) {
+		return new \WP_Error(
+			'access_denied',
+			__( 'Login is restricted to the site administrator.', 'limit-logins' )
+		);
+	}
+
+	// Allow login.
 	return $user;
 }
 
