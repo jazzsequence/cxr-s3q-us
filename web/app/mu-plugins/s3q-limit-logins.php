@@ -25,7 +25,7 @@ function handle_logout() {
 	wp_destroy_current_session();
 	wp_clear_auth_cookie();
 	// Redirect to home page after logout.
-	wp_redirect( home_url() );
+	wp_safe_redirect( home_url() );
 	exit;
 }
 
@@ -52,6 +52,11 @@ function it_me( $user_id = null ) {
  * @return WP_User|WP_Error The authenticated user object, or WP_Error on failure.
  */
 function restrict_logins( $user ) {
+	// Allow logout actions to bypass the filter.
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return $user;
+	}
+
 	// If login failed for other reasons, let the error pass through.
 	if ( is_wp_error( $user ) ) {
 		return $user;
