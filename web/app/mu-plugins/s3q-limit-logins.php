@@ -22,6 +22,8 @@ function bootstrap() {
  * Ensure clean logout handling.
  */
 function handle_logout() {
+	wp_destroy_current_session();
+	wp_clear_auth_cookie();
 	// Redirect to home page after logout.
 	wp_redirect( home_url() );
 	exit;
