@@ -15,6 +15,16 @@ namespace s3q\LimitLogins;
  */
 function bootstrap() {
 	add_filter( 'authenticate', __NAMESPACE__ . '\\restrict_logins', 30 );
+	add_action( 'wp_logout', __NAMESPACE__ . '\\handle_logout' );
+}
+
+/**
+ * Ensure clean logout handling.
+ */
+function handle_logout() {
+	// Redirect to home page after logout.
+	wp_redirect( home_url() );
+	exit;
 }
 
 /**
