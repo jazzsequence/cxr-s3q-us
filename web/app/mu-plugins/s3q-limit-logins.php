@@ -11,13 +11,9 @@
 namespace s3q\LimitLogins;
 
 /**
-<<<<<<< HEAD
  * Initializes the S3Q Limit Logins plugin.
  *
  * This function sets up the necessary hooks and filters to limit login attempts.
-=======
- * Do stuff.
->>>>>>> b9c69040e39c048fde40f908d322edc9c3fd8c4f
  */
 function bootstrap() {
 	add_filter( 'authenticate', __NAMESPACE__ . '\\restrict_logins', 30 );
@@ -30,20 +26,24 @@ function bootstrap() {
  */
 function it_me() {
 	$current_user = get_current_user_id();
-
+	var_dump( $current_user );
 	if ( ! $current_user ) {
+		printf( 'current user empty' );
 		return false;
 	}
 
 	if ( ! is_user_logged_in( $current_user ) ) {
+		printf( 'not logged in' );
 		return false;
 	}
 
 	if ( ! is_user_admin( $current_user ) ) {
+		printf( 'not admin' );
 		return false;
 	}
 
 	if ( $current_user !== 1 ) {
+		printf( 'not user 1' );
 		return false;
 	}
 
