@@ -37,8 +37,6 @@ function it_me( $user_id = null ) {
  * Restrict logins to only allow User ID 1.
  *
  * @param WP_User|WP_Error $user The authenticated user object, or WP_Error on failure.
- * @param string $username Username or email address used for login.
- * @param string $password Password used for login.
  * @return WP_User|WP_Error The authenticated user object, or WP_Error on failure.
  */
 function restrict_logins( $user ) {
