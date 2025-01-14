@@ -11,9 +11,13 @@
 namespace s3q\LimitLogins;
 
 /**
+<<<<<<< HEAD
  * Initializes the S3Q Limit Logins plugin.
  *
  * This function sets up the necessary hooks and filters to limit login attempts.
+=======
+ * Do stuff.
+>>>>>>> b9c69040e39c048fde40f908d322edc9c3fd8c4f
  */
 function bootstrap() {
 	add_filter( 'authenticate', __NAMESPACE__ . '\\restrict_logins', 30 );
@@ -56,18 +60,18 @@ function it_me() {
  * @return WP_User|WP_Error The authenticated user object, or WP_Error on failure.
  */
 function restrict_logins( $user ) {
-    // Check if the user is valid.
-    if ( ! is_wp_error( $user ) ) {
-        // If the user is not user ID 1, deny login.
-        if ( ! it_me() ) {
-            return new \WP_Error(
-                'access_denied',
-                __( 'Login is restricted to the site administrator.', 'limit-logins' )
-            );
-        }
-    }
+	// Check if the user is valid.
+	if ( ! is_wp_error( $user ) ) {
+		// If the user is not user ID 1, deny login.
+		if ( ! it_me() ) {
+			return new \WP_Error(
+				'access_denied',
+				__( 'Login is restricted to the site administrator.', 'limit-logins' )
+			);
+		}
+	}
 
-    return $user;
+	return $user;
 }
 
 // Maximum effort.
