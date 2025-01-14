@@ -239,6 +239,7 @@ function handle_public_shorten_url() {
 			echo esc_html( __( 'Error: ', 's3q-shortener' ) . ( $result['message'] ?? __( 'Unknown error', 's3q-shortener' ) ) );
 		}
 
+		get_footer();
 		exit;
 	}
 }
