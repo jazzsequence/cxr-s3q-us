@@ -150,7 +150,7 @@
             "terminus deploy cxr-s3q-us.live"
         ],
         "wait": [
-            "terminus workflow:wait cxr-s3q-us.dev"
+            "terminus workflow:wait --start -- cxr-s3q-us.dev"
         ],
         "push": [
             "git push origin main",
