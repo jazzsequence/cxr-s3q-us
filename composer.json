@@ -159,7 +159,7 @@
         "update-deps": [
             "composer update --ignore-platform-reqs",
             "git add composer.*",
-            "git commit -m \"update composer dependencies\""
+            "git commit -m \"update composer dependencies\" || true"
         ],
         "update-and-deploy": [
             "@update-deps",
