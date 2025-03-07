@@ -148,6 +148,20 @@
         "deploy": [
             "terminus deploy cxr-s3q-us.test",
             "terminus deploy cxr-s3q-us.live"
+        ],
+        "push": [
+            "git push origin main",
+            "terminus workflow:wait cxr-s3q.us.dev"
+        ],
+        "update-deps": [
+            "composer update --ignore-platform-reqs",
+            "git add composer.*",
+            "git commit -m \"update composer dependencies\""
+        ],
+        "update-and-deploy": [
+            "@update-deps",
+            "@push",
+            "@deploy"
         ]
     },
     "suggest": {
