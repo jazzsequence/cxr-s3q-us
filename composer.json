@@ -149,9 +149,12 @@
             "terminus deploy cxr-s3q-us.test",
             "terminus deploy cxr-s3q-us.live"
         ],
+        "wait": [
+            "terminus workflow:wait cxr-s3q-us.dev"
+        ],
         "push": [
             "git push origin main",
-            "terminus workflow:wait cxr-s3q-us.dev"
+            "@wait"
         ],
         "update-deps": [
             "composer update --ignore-platform-reqs",
