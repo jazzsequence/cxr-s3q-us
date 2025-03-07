@@ -151,7 +151,7 @@
         ],
         "push": [
             "git push origin main",
-            "terminus workflow:wait cxr-s3q.us.dev"
+            "terminus workflow:wait cxr-s3q-us.dev"
         ],
         "update-deps": [
             "composer update --ignore-platform-reqs",
