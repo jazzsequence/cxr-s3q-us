@@ -1,6 +1,6 @@
 # s3q.us
 
-Main codebase for rebuilt `s3q.us` domain. Uses (experimental) Pantheon B(ring) Y(our) O(wn) VCS (version control system) (name tbd) and [WordPress (Composer Managed)](https://github.com/pantheon-systems/wordpress-composer-managed) [Bedrock](https://roots.io/bedrock)-based WordPress install.
+Main codebase for rebuilt `s3q.us` domain. Uses (experimental) [Push to Pantheon GitHub Action](https://github.com/stevector/push-to-pantheon) and [WordPress (Composer Managed)](https://github.com/pantheon-systems/wordpress-composer-managed) [Bedrock](https://roots.io/bedrock)-based WordPress install.
 
 ## Powered by Bedrock and Pantheon
 
