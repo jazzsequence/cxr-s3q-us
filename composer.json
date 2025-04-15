@@ -146,11 +146,11 @@
         "test": [],
         "post-update-cmd": ["WordPressComposerManaged\\ComposerScripts::postUpdate"],
         "deploy": [
-            "terminus deploy cxr-s3q-us.test",
-            "terminus deploy cxr-s3q-us.live"
+            "terminus deploy s3qus.test",
+            "terminus deploy s3qus.live"
         ],
         "wait": [
-            "terminus workflow:wait cxr-s3q-us.dev"
+            "terminus workflow:wait s3qus.dev"
         ],
         "push": [
             "git push origin main",
