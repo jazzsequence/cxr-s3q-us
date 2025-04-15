@@ -6,8 +6,11 @@ on:
     paths-ignore:
       - '.github/**'
       - 'README.md'
+      - 'CHANGELOG.md'
       - 'web/app/object-cache.php'
       - 'composer.*'
+      - 'private/scripts/*'
+      - 'upstream-configuration/**'
   pull_request:
   workflow_dispatch:
 
