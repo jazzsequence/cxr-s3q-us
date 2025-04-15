@@ -163,7 +163,7 @@
             "terminus workflow:wait",
             "terminus connection:set cxr-s3q-us.dev git",
             "git fetch pantheon",
-            "git pull pantheon/master"
+            "echo 'Cherry pick the latest commit from the pantheon remote to get the latest OCP drop-in'"
         ],
         "update-deps": [
             "composer update --ignore-platform-reqs",
