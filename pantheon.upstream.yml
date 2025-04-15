@@ -5,7 +5,7 @@ enforce_https: transitional
 php_version: 8.1
 database:
   version: 10.4
-build_step: true
+build_step: false
 filemount: /app/uploads
 protected_web_paths:
   - /app/uploads/private/
