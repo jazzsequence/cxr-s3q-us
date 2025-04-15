@@ -1,0 +1,53 @@
+name: Deploy to Pantheon
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - 'README.md'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  deployments: write
+  statuses: write
+
+jobs:
+  deploy:
+    name: Deploy s3q.us
+    runs-on: ubuntu-latest
+    env:
+      git_user_name: "Pantheon Robot"
+      git_user_email: "bot@getpantheon.com"
+    concurrency:
+      group: ${{ github.workflow }}-main
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHP CodeSniffer
+        run: composer lint:phpcs 
+
+      - name: Push to Pantheon
+        uses: stevector/push-to-pantheon@0.5.0
+        with:
+          ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          machine_token: ${{ secrets.TERMINUS_TOKEN }}
+          site: cxr-s3q-us
+          git_user_name: ${{ env.git_user_name }}
+          git_user_email: ${{ env.git_user_email }}
+          git_commit_message: "🤖 Commit build assets"
+      
+  
