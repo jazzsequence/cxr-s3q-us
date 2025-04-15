@@ -146,15 +146,24 @@
         "test": [],
         "post-update-cmd": ["WordPressComposerManaged\\ComposerScripts::postUpdate"],
         "deploy": [
-            "terminus deploy s3qus.test",
-            "terminus deploy s3qus.live"
+            "terminus deploy cxr-s3q-us.test",
+            "terminus deploy cxr-s3q-us.live"
         ],
         "wait": [
-            "terminus workflow:wait s3qus.dev"
+            "terminus workflow:wait cxr-s3q-us.dev"
         ],
         "push": [
             "git push origin main",
             "@wait"
+        ],
+        "update-ocp-drop-in": [
+            "terminus connection:set cxr-s3q-us.dev sftp",
+            "terminus wp -- cxr-s3q-us.dev redis enable --force",
+            "terminus env:commit --message='Updating OCP drop-in'",
+            "terminus workflow:wait",
+            "terminus connection:set cxr-s3q-us.dev git",
+            "git fetch pantheon",
+            "git pull pantheon/master"
         ],
         "update-deps": [
             "composer update --ignore-platform-reqs",
