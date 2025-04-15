@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - '.github/**'
       - 'README.md'
+      - 'web/app/object-cache.php'
   pull_request:
   workflow_dispatch:
 
