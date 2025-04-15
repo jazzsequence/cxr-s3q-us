@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: weekly
       timezone: America/Los_Angeles
-      day: sunday
+      day: monday
     target-branch: main
     open-pull-requests-limit: 99
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly  
