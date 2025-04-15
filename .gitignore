@@ -147,6 +147,7 @@ pantheon.upstream.yml
 ######################
 *.log
 *.sql
+_misc
 
 # OS generated files #
 ######################
