@@ -144,14 +144,15 @@
         "lint:phpcbf": ["vendor/bin/phpcbf ."],
         "lint:bash": ["shellcheck private/scripts/*.sh"],
         "test": [],
-        "post-update-cmd": ["WordPressComposerManaged\\ComposerScripts::postUpdate"],
+        "post-update-cmd": [
+            "WordPressComposerManaged\\ComposerScripts::postUpdate",
+            "@maybe-add-symlinks"
+        ],
         "deploy": [
             "terminus deploy cxr-s3q-us.test",
             "terminus deploy cxr-s3q-us.live"
         ],
-        "wait": [
-            "terminus workflow:wait cxr-s3q-us.dev"
-        ],
+        "wait": ["terminus workflow:wait cxr-s3q-us.dev"],
         "push": [
             "git push origin main",
             "@wait"
