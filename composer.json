@@ -83,6 +83,19 @@
             }
         },
         {
+            "type": "package",
+            "package": {
+                "name": "afragen/git-updater",
+                "version": "12.16.1",
+                "type": "wordpress-plugin",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/afragen/git-updater/releases/download/12.16.1/git-updater-12.16.1.zip",
+                    "reference": "tags/12.16.1"
+                }
+            }
+        },
+        {
             "type": "path",
             "url": "upstream-configuration"
         }
@@ -135,9 +148,7 @@
     "prefer-stable": true,
     "extra": {
         "installer-paths": {
-            "web/app/mu-plugins/{$name}/": [
-                "type:wordpress-muplugin"
-            ],
+            "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
             "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
             "web/app/themes/{$name}/": ["type:wordpress-theme"]
         },
@@ -158,9 +169,6 @@
         "patches": {
             "freemius/wordpress-sdk": {
                 "Defer Freemius SDK start.php execution": "patches/freemius-sdk-defer-start.patch"
-            },
-            "afragen/git-updater": {
-                "Delay Freemius initialization until plugins_loaded": "patches/git-updater-delay-freemius-init.patch"
             }
         }
     },
