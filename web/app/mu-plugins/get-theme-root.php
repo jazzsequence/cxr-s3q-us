@@ -1,8 +1,10 @@
 <?php
 /**
- * Require theme.php if it's not already loaded to avoid get_theme_root not defined error.
+ * Load autoloader
  */
 
-if ( ! function_exists( 'get_theme_root' ) ) {
-	require_once ABSPATH . '/wp-includes/theme.php';
+if ( file_exists( ABSPATH . '/vendor/autoload.php' ) ) {
+	require_once dirname(__DIR__) . '/vendor/autoload.php';
+} else {
+	wp_die( 'Autoloader not found' );
 }
