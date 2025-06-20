@@ -92,8 +92,9 @@
 +
 +					// Ensure Freemius SDK start.php is loaded.
 +					// This was previously in autoload.files of freemius/wordpress-sdk.
++					// Path adjusted to point to the main project vendor directory.
 +					if ( ! function_exists('fs_dynamic_init') ) {
-+						require_once dirname( __DIR__, 2 ) . '/vendor/freemius/wordpress-sdk/start.php';
++						require_once dirname( __DIR__, 4 ) . '/vendor/freemius/wordpress-sdk/start.php';
 +					}
 +
 +					$gu_fs = fs_dynamic_init(

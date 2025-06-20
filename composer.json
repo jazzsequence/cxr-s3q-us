@@ -136,7 +136,6 @@
     "extra": {
         "installer-paths": {
             "web/app/mu-plugins/{$name}/": [
-                "freemius/wordpress-sdk",
                 "type:wordpress-muplugin"
             ],
             "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
