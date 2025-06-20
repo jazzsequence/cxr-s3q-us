@@ -24,6 +24,7 @@ function custom_reorganize_admin_menu() {
 		'plugins.php' => [ 'Plugins', 'activate_plugins', 'plugins.php', 'plugin-install.php', 'plugin-editor.php' ],
 		'users.php' => [ 'Users', 'list_users', 'users.php', 'user-edit.php', 'profile.php' ],
 		'options-general.php' => [ 'Settings', 'manage_options', 'options-general.php', 'options.php' ],
+		'admin.php?page=minifair' => [ 'FAIR', 'admin.php?page=minifair', 'edit.php?post_type=plc_did', 'admin.php?page=fair-settings' ],
 	];
 
 	foreach ( $menus_to_move as $menu_slug => $menu_details ) {
