@@ -24,6 +24,7 @@
   <exclude-pattern>web/app/plugins/object-cache-pro/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/pantheon-advanced-page-cache/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/query-monitor/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/git-updater/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/safe-redirect-manager/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/wp-native-php-sessions/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/pantheon-hud/*</exclude-pattern>
