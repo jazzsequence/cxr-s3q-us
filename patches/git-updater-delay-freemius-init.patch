@@ -1,0 +1,137 @@
+--- a/src/Git_Updater/GU_Freemius.php
++++ b/src/Git_Updater/GU_Freemius.php
+@@ -20,53 +20,7 @@
+ 	 * @return array|void
+ 	 */
+ 	public function init() {
+-		if ( ! function_exists( 'gu_fs' ) ) {
+-
+-			/**
+-			 * Create a helper function for easy SDK access.
+-			 *
+-			 * @return \stdClass
+-			 */
+-			function gu_fs() {
+-				global $gu_fs;
+-
+-				if ( ! isset( $gu_fs ) ) {
+-					// Activate multisite network integration.
+-					if ( ! defined( 'WP_FS__PRODUCT_11525_MULTISITE' ) ) {
+-						define( 'WP_FS__PRODUCT_11525_MULTISITE', true );
+-					}
+-
+-					// Init Freemius SDK.
+-					require_once dirname( __DIR__, 2 ) . '/vendor/freemius/wordpress-sdk/start.php';
+-
+-					$gu_fs = fs_dynamic_init(
+-						[
+-							'id'                  => '11525',
+-							'slug'                => 'git-updater',
+-							'premium_slug'        => 'git-updater',
+-							'type'                => 'plugin',
+-							'public_key'          => 'pk_aaa04d83b4c42470937266f9b4fca',
+-							'is_premium'          => true,
+-							'premium_suffix'      => '',
+-							// If your plugin is a serviceware, set this option to false.
+-							'has_premium_version' => true,
+-							'has_addons'          => false,
+-							'has_paid_plans'      => true,
+-							'is_org_compliant'    => false,
+-							'trial'               => [
+-								'days'               => 14,
+-								'is_require_payment' => true,
+-							],
+-							'menu'                => [
+-								'slug'    => 'git-updater',
+-								'support' => false,
+-								'network' => true,
+-								'parent'  => [
+-									'slug' => is_multisite() ? 'settings.php' : 'options-general.php',
+-								],
+-							],
+-						]
+-					);
+-				}
+-
+-				return $gu_fs;
+-			}
+-
+-			// Init Freemius.
+-			gu_fs();
+-			// Signal that SDK was initiated.
+-			do_action( 'gu_fs_loaded' );
+-		}
++		add_action( 'plugins_loaded', [ $this, 'initialize_freemius_on_hook' ], 5 );
+ 
+ 		global $gu_fs;
+ 		$gu_fs->add_filter( 'plugin_icon', [ $this, 'add_icon' ] );
+@@ -85,6 +39,57 @@
+ 		if ( ! defined( 'FS__RESOLVE_CLONE_AS' ) ) {
+ 			define( 'FS__RESOLVE_CLONE_AS', 'long_term_duplicate' );
+ 		}
++	}
++
++	/**
++	 * Initialize Freemius on the 'plugins_loaded' hook.
++	 */
++	public function initialize_freemius_on_hook() {
++		if ( ! function_exists( 'gu_fs' ) ) {
++			/**
++			 * Create a helper function for easy SDK access.
++			 *
++			 * @return \stdClass
++			 */
++			function gu_fs() {
++				global $gu_fs;
++
++				if ( ! isset( $gu_fs ) ) {
++					// Activate multisite network integration.
++					if ( ! defined( 'WP_FS__PRODUCT_11525_MULTISITE' ) ) {
++						define( 'WP_FS__PRODUCT_11525_MULTISITE', true );
++					}
++
++					// Ensure Freemius SDK start.php is loaded.
++					// This was previously in autoload.files of freemius/wordpress-sdk.
++					if ( ! function_exists('fs_dynamic_init') ) {
++						require_once dirname( __DIR__, 2 ) . '/vendor/freemius/wordpress-sdk/start.php';
++					}
++
++					$gu_fs = fs_dynamic_init(
++						[
++							'id'                  => '11525',
++							'slug'                => 'git-updater',
++							'premium_slug'        => 'git-updater',
++							'type'                => 'plugin',
++							'public_key'          => 'pk_aaa04d83b4c42470937266f9b4fca',
++							'is_premium'          => true,
++							'premium_suffix'      => '',
++							'has_premium_version' => true,
++							'has_addons'          => false,
++							'has_paid_plans'      => true,
++							'is_org_compliant'    => false,
++							'trial'               => [
++								'days'               => 14,
++								'is_require_payment' => true,
++							],
++							'menu'                => [
++								'slug'    => 'git-updater',
++								'support' => false,
++								'network' => true,
++								'parent'  => [
++									'slug' => is_multisite() ? 'settings.php' : 'options-general.php',
++								],
++							],
++						]
++					);
++				}
++				return $gu_fs;
++			}
++
++			// Init Freemius.
++			gu_fs();
++			// Signal that SDK was initiated.
++			do_action( 'gu_fs_loaded' );
++		}
+ 	}
+ 
+ 	/**
