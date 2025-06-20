@@ -157,7 +157,10 @@
         "classmap": ["upstream-configuration/scripts/ComposerScripts.php"]
     },
     "scripts": {
-        "post-install-cmd": "@maybe-add-symlinks",
+        "post-install-cmd": [
+            "@maybe-add-symlinks",
+            "composer install --no-dev --prefer-dist --working-dir=./web/app/mu-plugins/mini-fair-repo"
+        ],
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
         "install-sage": ["bash ./private/scripts/helpers.sh install_sage"],
         "maybe-add-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
@@ -173,6 +176,7 @@
         "test": [],
         "post-update-cmd": [
             "WordPressComposerManaged\\ComposerScripts::postUpdate",
+            "composer update --no-dev --prefer-dist --working-dir=./web/app/mu-plugins/mini-fair-repo",
             "@maybe-add-symlinks"
         ],
         "deploy": [
