@@ -181,15 +181,30 @@ function _get_blocks_for_workflow() {
 	
 		case 'sync_code':
 		case 'sync_code_external_vcs':
-			// Get the time, committer, and message for the most recent commit
-			$committer = trim(`git log -1 --pretty=%cn`);
-			$hash = trim(`git log -1 --pretty=%h`);
-			$message = trim(`git log -1 --pretty=%B`);
-			$blocks[] = _create_multi_block([
-				"*Commit:* {$hash}",
-				"*Committed by:* {$committer}",
-			]);
-			$blocks[] = _create_text_block("*Commit Message:*\n{$message}");
+			// Get the committer, hash, and message for the commit PRIOR to the most recent one (HEAD~1)
+			$committer = trim(`git log -1 HEAD~1 --pretty=%cn`);
+			$hash = trim(`git log -1 HEAD~1 --pretty=%h`);
+			$message = trim(`git log -1 HEAD~1 --pretty=%B`);
+
+			// Check if we actually got a previous commit's details
+			// (e.g., if there's only one commit in the history, HEAD~1 won't exist)
+			if (!empty($hash)) {
+				$blocks[] = _create_multi_block([
+					"*Previous Commit:* {$hash}",
+					"*Committed by:* {$committer}",
+				]);
+				$blocks[] = _create_text_block("*Previous Commit Message:*\n{$message}");
+			} else {
+				// Optionally, report the current commit if no prior one exists
+				$latest_committer = trim(`git log -1 --pretty=%cn`);
+				$latest_hash = trim(`git log -1 --pretty=%h`);
+				$latest_message = trim(`git log -1 --pretty=%B`);
+				$blocks[] = _create_multi_block([
+					 "*Latest Commit:* {$latest_hash}",
+					 "*Committed by:* {$latest_committer}",
+				]);
+				$blocks[] = _create_text_block("*Latest Commit Message:*\n{$latest_message}");
+			}
 			break;
 	
 		case 'clear_cache':
