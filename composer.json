@@ -155,6 +155,9 @@
         "enable-patching": true
     },
     "autoload": {
+        "files": [
+            "config/early-wp-init.php"
+        ],
         "classmap": ["upstream-configuration/scripts/ComposerScripts.php"]
     },
     "scripts": {
