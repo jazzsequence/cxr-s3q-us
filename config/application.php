@@ -204,6 +204,15 @@ if ( file_exists( $env_config ) ) {
 	require_once $env_config;
 }
 
+if ( file_exists( ABSPATH . 'wp-includes/plugin.php' ) ) {
+    require_once ABSPATH . 'wp-includes/plugin.php';
+}
+
+// wp-includes/theme.php defines get_theme_root() and other theme functions.
+if ( file_exists( ABSPATH . 'wp-includes/theme.php' ) ) {
+    require_once ABSPATH . 'wp-includes/theme.php';
+}
+
 Config::apply();
 
 /**
