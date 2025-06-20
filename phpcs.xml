@@ -20,6 +20,7 @@
   <exclude-pattern>web/app/mu-plugins/bedrock-autoloader.php</exclude-pattern>
   <exclude-pattern>web/app/mu-plugins/filters.php</exclude-pattern>
   <exclude-pattern>web/app/mu-plugins/mini-fair-repo/*</exclude-pattern>
+  <exclude-pattern>web/app/mu-plugins/fair-plugin/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/object-cache-pro/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/pantheon-advanced-page-cache/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/query-monitor/*</exclude-pattern>
