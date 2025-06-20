@@ -4,5 +4,5 @@
  */
 
 if ( ! function_exists( 'get_theme_root' ) ) {
-	require_once WPINC . '/theme.php';
+	require_once ABSPATH . '/wp-includes/theme.php';
 }
