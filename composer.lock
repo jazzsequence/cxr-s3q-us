@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e111c3d6916347ac1bdff234a54aa9c5",
+    "content-hash": "fe690fbea68b3f675e4abbe77bf21211",
     "packages": [
         {
             "name": "afragen/git-updater",
@@ -463,7 +463,7 @@
                 "url": "https://github.com/fairpm/mini-fair-repo",
                 "reference": "8c166de8275046f0c19eb5f675169df0abbf934f"
             },
-            "type": "wordpress-muplugin"
+            "type": "wordpress-plugin"
         },
         {
             "name": "freemius/wordpress-sdk",
@@ -855,11 +855,11 @@
         },
         {
             "name": "rhubarbgroup/object-cache-pro",
-            "version": "v1.24.1",
+            "version": "v1.24.2",
             "dist": {
                 "type": "zip",
-                "url": "https://objectcache.pro/plugin/object-cache-pro-1.24.1.zip?token=dd9cc75fa72816fe69f8b3ccc7b8f68ab6043278921d52c3a7990c67aae3",
-                "reference": "63ff16748c3a90bdeb2de647cbd656e580299ca1"
+                "url": "https://objectcache.pro/plugin/object-cache-pro-1.24.2.zip?token=dd9cc75fa72816fe69f8b3ccc7b8f68ab6043278921d52c3a7990c67aae3",
+                "reference": "acfe64a924006cf62f6edc84e8e4770a091f3c91"
             },
             "require": {
                 "composer/installers": "~1.0 || ~2.0",
@@ -895,7 +895,7 @@
             ],
             "description": "A business class Redis object cache backend for WordPress.",
             "homepage": "https://objectcache.pro",
-            "time": "2025-06-18T04:36:08+00:00"
+            "time": "2025-06-20T15:46:38+00:00"
         },
         {
             "name": "roots/bedrock-autoloader",

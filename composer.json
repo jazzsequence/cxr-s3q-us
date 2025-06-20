@@ -61,7 +61,7 @@
             "package": {
                 "name": "fair/mini-fair-repo",
                 "version": "0.1.0",
-                "type": "wordpress-muplugin",
+                "type": "wordpress-plugin",
                 "source": {
                     "type": "git",
                     "url": "https://github.com/fairpm/mini-fair-repo",
@@ -160,7 +160,7 @@
     "scripts": {
         "post-install-cmd": [
             "@maybe-add-symlinks",
-            "composer install --no-dev --prefer-dist --working-dir=./web/app/mu-plugins/mini-fair-repo"
+            "composer install --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo"
         ],
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
         "install-sage": ["bash ./private/scripts/helpers.sh install_sage"],
@@ -177,7 +177,7 @@
         "test": [],
         "post-update-cmd": [
             "WordPressComposerManaged\\ComposerScripts::postUpdate",
-            "composer update --no-dev --prefer-dist --working-dir=./web/app/mu-plugins/mini-fair-repo",
+            "composer update --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo",
             "@maybe-add-symlinks"
         ],
         "deploy": [
