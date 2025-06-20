@@ -59,13 +59,26 @@
         {
             "type": "package",
             "package": {
-                "name": "fairpm/mini-fair-repo",
+                "name": "fair/mini-fair-repo",
                 "version": "0.1.0",
                 "type": "wordpress-muplugin",
                 "source": {
                     "type": "git",
                     "url": "https://github.com/fairpm/mini-fair-repo",
                     "reference": "8c166de8275046f0c19eb5f675169df0abbf934f"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "fair/fair-plugin",
+                "version": "0.3.0",
+                "type": "wordpress-muplugin",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/fairpm/fair-plugin",
+                    "reference": "tags/0.3.0"
                 }
             }
         },
@@ -78,7 +91,8 @@
         "php": ">=8.0",
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
-        "fairpm/mini-fair-repo": "*",
+        "fair/fair-plugin": "*",
+        "fair/mini-fair-repo": "*",
         "humanmade/two-factor": "*",
         "oscarotero/env": "^2.1",
         "pantheon-systems/pantheon-hud": "*",

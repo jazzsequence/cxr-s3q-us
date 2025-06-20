@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adc84afe598348b30ff56e7d21e0103a",
+    "content-hash": "5d2c2c0326eebdaec2c5835c21d47784",
     "packages": [
         {
             "name": "composer/installers",
@@ -201,7 +201,17 @@
             "time": "2022-12-20T22:53:13+00:00"
         },
         {
-            "name": "fairpm/mini-fair-repo",
+            "name": "fair/fair-plugin",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fairpm/fair-plugin",
+                "reference": "tags/0.3.0"
+            },
+            "type": "wordpress-muplugin"
+        },
+        {
+            "name": "fair/mini-fair-repo",
             "version": "0.1.0",
             "source": {
                 "type": "git",
