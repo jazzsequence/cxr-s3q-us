@@ -4,8 +4,203 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d2c2c0326eebdaec2c5835c21d47784",
+    "content-hash": "e111c3d6916347ac1bdff234a54aa9c5",
     "packages": [
+        {
+            "name": "afragen/git-updater",
+            "version": "12.16.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/afragen/git-updater.git",
+                "reference": "6b56b7eb5298fae00877a215d6577d94ed4e2d6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afragen/git-updater/zipball/6b56b7eb5298fae00877a215d6577d94ed4e2d6e",
+                "reference": "6b56b7eb5298fae00877a215d6577d94ed4e2d6e",
+                "shasum": ""
+            },
+            "require": {
+                "afragen/singleton": "^1.0",
+                "afragen/wordpress-plugin-readme-parser": "^1",
+                "afragen/wp-dismiss-notice": "*",
+                "freemius/wordpress-sdk": "^2.12",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "wp-coding-standards/wpcs": "^3.0.0"
+            },
+            "type": "wordpress-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Fragen\\Git_Updater\\": "src/Git_Updater/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Fragen",
+                    "email": "andy@thefragens.com",
+                    "homepage": "https://thefragens.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A plugin to automatically update GitHub, Bitbucket, GitLab, or Gitea hosted plugins, themes, and language packs.",
+            "keywords": [
+                "plugin",
+                "theme",
+                "updater",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/afragen/git-updater/issues",
+                "source": "https://github.com/afragen/git-updater"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/afragen",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-06-12T23:05:48+00:00"
+        },
+        {
+            "name": "afragen/singleton",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/afragen/singleton.git",
+                "reference": "c93d90651dcf027bcd365d81bccf1eda73fe2f2d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afragen/singleton/zipball/c93d90651dcf027bcd365d81bccf1eda73fe2f2d",
+                "reference": "c93d90651dcf027bcd365d81bccf1eda73fe2f2d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Singleton.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Fragen",
+                    "email": "andy@thefragens.com",
+                    "homepage": "https://github.com/afragen/singleton",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A singleton static proxy generator.",
+            "keywords": [
+                "singleton",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/afragen/singleton/issues",
+                "source": "https://github.com/afragen/singleton/tree/1.0.5"
+            },
+            "time": "2024-11-19T17:40:31+00:00"
+        },
+        {
+            "name": "afragen/wordpress-plugin-readme-parser",
+            "version": "1.2024.12.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/afragen/wordpress-plugin-readme-parser.git",
+                "reference": "803ccfc442d956aa04d69f4b234eda5d7f03afc4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afragen/wordpress-plugin-readme-parser/zipball/803ccfc442d956aa04d69f4b234eda5d7f03afc4",
+                "reference": "803ccfc442d956aa04d69f4b234eda5d7f03afc4",
+                "shasum": ""
+            },
+            "require": {
+                "erusev/parsedown": "^1.7",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class-parser.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "WordPress.org",
+                    "homepage": "https://meta.trac.wordpress.org/browser/sites/trunk/wordpress.org/public_html/wp-content/plugins/plugin-directory/readme"
+                }
+            ],
+            "description": "A clone of the current WordPress.org Plugin Readme Parser, class-parser.php",
+            "keywords": [
+                "parser",
+                "readme",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/afragen/wordpress-plugin-readme-parser/issues",
+                "source": "https://github.com/afragen/wordpress-plugin-readme-parser/tree/1.2024.12.10"
+            },
+            "time": "2024-12-10T23:43:17+00:00"
+        },
+        {
+            "name": "afragen/wp-dismiss-notice",
+            "version": "0.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/afragen/wp-dismiss-notice.git",
+                "reference": "3e2c694ca891fe94771457f54a3a5457a70c0aec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/afragen/wp-dismiss-notice/zipball/3e2c694ca891fe94771457f54a3a5457a70c0aec",
+                "reference": "3e2c694ca891fe94771457f54a3a5457a70c0aec",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "wp-dismiss-notice.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Fragen",
+                    "email": "andy@thefragens.com",
+                    "homepage": "https://thefragens.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Library for time dismissible WordPress admin notices.",
+            "support": {
+                "issues": "https://github.com/afragen/wp-dismiss-notice/issues",
+                "source": "https://github.com/afragen/wp-dismiss-notice"
+            },
+            "time": "2023-05-30T21:45:15+00:00"
+        },
         {
             "name": "composer/installers",
             "version": "v2.3.0",
@@ -201,6 +396,56 @@
             "time": "2022-12-20T22:53:13+00:00"
         },
         {
+            "name": "erusev/parsedown",
+            "version": "1.7.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/erusev/parsedown.git",
+                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
+                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Parsedown": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Emanuil Rusev",
+                    "email": "hello@erusev.com",
+                    "homepage": "http://erusev.com"
+                }
+            ],
+            "description": "Parser for Markdown.",
+            "homepage": "http://parsedown.org",
+            "keywords": [
+                "markdown",
+                "parser"
+            ],
+            "support": {
+                "issues": "https://github.com/erusev/parsedown/issues",
+                "source": "https://github.com/erusev/parsedown/tree/1.7.x"
+            },
+            "time": "2019-12-30T22:54:17+00:00"
+        },
+        {
             "name": "fair/fair-plugin",
             "version": "0.3.0",
             "source": {
@@ -219,6 +464,59 @@
                 "reference": "8c166de8275046f0c19eb5f675169df0abbf934f"
             },
             "type": "wordpress-muplugin"
+        },
+        {
+            "name": "freemius/wordpress-sdk",
+            "version": "2.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Freemius/wordpress-sdk.git",
+                "reference": "db6f35a2b3d318a53330409dbeab49156ee76dd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Freemius/wordpress-sdk/zipball/db6f35a2b3d318a53330409dbeab49156ee76dd8",
+                "reference": "db6f35a2b3d318a53330409dbeab49156ee76dd8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpcompatibility/phpcompatibility-wp": "^2.1",
+                "phpstan/extension-installer": "^1.3",
+                "squizlabs/php_codesniffer": "^3.7",
+                "szepeviktor/phpstan-wordpress": "^1.3",
+                "wp-coding-standards/wpcs": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "start.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "description": "Freemius WordPress SDK",
+            "homepage": "https://freemius.com",
+            "keywords": [
+                "freemius",
+                "plugin",
+                "sdk",
+                "theme",
+                "wordpress",
+                "wordpress-plugin",
+                "wordpress-theme"
+            ],
+            "support": {
+                "issues": "https://github.com/Freemius/wordpress-sdk/issues",
+                "source": "https://github.com/Freemius/wordpress-sdk/tree/2.12.0"
+            },
+            "time": "2025-05-11T07:07:09+00:00"
         },
         {
             "name": "graham-campbell/result-type",

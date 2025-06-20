@@ -89,6 +89,7 @@
     ],
     "require": {
         "php": ">=8.0",
+        "afragen/git-updater": "^12.16",
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
         "fair/fair-plugin": "*",
