@@ -57,6 +57,19 @@
             "url": "https://objectcache.pro/repo/"
         },
         {
+            "type": "package",
+            "package": {
+                "name": "fairpm/mini-fair-repo",
+                "version": "0.1.0",
+                "type": "wordpress-muplugin",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/fairpm/mini-fair-repo",
+                    "reference": "8c166de8275046f0c19eb5f675169df0abbf934f"
+                }
+            }
+        },
+        {
             "type": "path",
             "url": "upstream-configuration"
         }
@@ -65,6 +78,7 @@
         "php": ">=8.0",
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
+        "fairpm/mini-fair-repo": "*",
         "humanmade/two-factor": "*",
         "oscarotero/env": "^2.1",
         "pantheon-systems/pantheon-hud": "*",
@@ -75,7 +89,6 @@
         "roots/bedrock-disallow-indexing": "*",
         "roots/wordpress": "*",
         "roots/wp-config": "*",
-        "roots/wp-password-bcrypt": "*",
         "vlucas/phpdotenv": "^5.5",
         "wpackagist-plugin/debug-bar": "*",
         "wpackagist-plugin/pantheon-advanced-page-cache": "*",
@@ -130,10 +143,10 @@
         "classmap": ["upstream-configuration/scripts/ComposerScripts.php"]
     },
     "scripts": {
-        "post-install-cmd": "@maybe-create-symlinks",
+        "post-install-cmd": "@maybe-add-symlinks",
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
         "install-sage": ["bash ./private/scripts/helpers.sh install_sage"],
-        "maybe-create-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
+        "maybe-add-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
         "lint": [
             "@lint:php",
             "@lint:phpcs",
