@@ -57,14 +57,56 @@
             "url": "https://objectcache.pro/repo/"
         },
         {
+            "type": "package",
+            "package": {
+                "name": "fair/mini-fair-repo",
+                "version": "0.1.0",
+                "type": "wordpress-plugin",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/fairpm/mini-fair-repo",
+                    "reference": "8c166de8275046f0c19eb5f675169df0abbf934f"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "fair/fair-plugin",
+                "version": "0.3.0",
+                "type": "wordpress-muplugin",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/fairpm/fair-plugin",
+                    "reference": "tags/0.3.0"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "afragen/git-updater",
+                "version": "12.16.1",
+                "type": "wordpress-plugin",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/afragen/git-updater/releases/download/12.16.1/git-updater-12.16.1.zip",
+                    "reference": "tags/12.16.1"
+                }
+            }
+        },
+        {
             "type": "path",
             "url": "upstream-configuration"
         }
     ],
     "require": {
         "php": ">=8.0",
+        "afragen/git-updater": "^12.16",
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
+        "fair/fair-plugin": "*",
+        "fair/mini-fair-repo": "*",
         "humanmade/two-factor": "*",
         "oscarotero/env": "^2.1",
         "pantheon-systems/pantheon-hud": "*",
@@ -75,7 +117,6 @@
         "roots/bedrock-disallow-indexing": "*",
         "roots/wordpress": "*",
         "roots/wp-config": "*",
-        "roots/wp-password-bcrypt": "*",
         "vlucas/phpdotenv": "^5.5",
         "wpackagist-plugin/debug-bar": "*",
         "wpackagist-plugin/pantheon-advanced-page-cache": "*",
@@ -124,16 +165,24 @@
             }
         },
         "composer-exit-on-patch-failure": true,
-        "enable-patching": true
+        "enable-patching": true,
+        "patches": {
+            "freemius/wordpress-sdk": {
+                "Defer Freemius SDK start.php execution": "patches/freemius-sdk-defer-start.patch"
+            }
+        }
     },
     "autoload": {
         "classmap": ["upstream-configuration/scripts/ComposerScripts.php"]
     },
     "scripts": {
-        "post-install-cmd": "@maybe-create-symlinks",
+        "post-install-cmd": [
+            "@maybe-add-symlinks",
+            "composer install --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo"
+        ],
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
         "install-sage": ["bash ./private/scripts/helpers.sh install_sage"],
-        "maybe-create-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
+        "maybe-add-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
         "lint": [
             "@lint:php",
             "@lint:phpcs",
@@ -146,6 +195,7 @@
         "test": [],
         "post-update-cmd": [
             "WordPressComposerManaged\\ComposerScripts::postUpdate",
+            "composer update --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo",
             "@maybe-add-symlinks"
         ],
         "deploy": [
