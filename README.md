@@ -69,12 +69,6 @@ Pushes the code to Github which may trigger a deploy from GitHub to Pantheon.
 
 - `wait`
 
-### `composer update-ocp-drop-in`
-
-Switches the Pantheon environment to SFTP for the purpose of generating a new Object Cache Pro drop-in, i.e. when a new version of OCP is released.
-
-Once the drop-in is generated, the environment is switched back to Git mode and you will need to cherry pick the commit from Pantheon to apply it to the GitHub repository. When the drop-in is added to GitHub, it does not trigger a deploy. <!-- Should this change? -->
-
 #### Uses
 
 - `wait`
