@@ -2,7 +2,7 @@
 
 [![Deploy to Pantheon](https://github.com/jazzsequence/cxr-s3q-us/actions/workflows/deploy-to-pantheon.yml/badge.svg?branch=main)](https://github.com/jazzsequence/cxr-s3q-us/actions/workflows/deploy-to-pantheon.yml)
 
-Main codebase for rebuilt `s3q.us` domain. Uses (experimental) [Push to Pantheon GitHub Action](https://github.com/stevector/push-to-pantheon) and [WordPress (Composer Managed)](https://github.com/pantheon-systems/wordpress-composer-managed) [Bedrock](https://roots.io/bedrock)-based WordPress install.
+Main codebase for rebuilt `s3q.us` domain. Uses [Push to Pantheon GitHub Action](https://github.com/pantheon-systems/push-to-pantheon) and [WordPress (Composer Managed)](https://github.com/pantheon-systems/wordpress-composer-managed) [Bedrock](https://roots.io/bedrock)-based WordPress install.
 
 ## Setup
 
