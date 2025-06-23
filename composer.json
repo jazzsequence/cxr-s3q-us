@@ -145,7 +145,7 @@
         "test": [],
         "post-update-cmd": [
             "WordPressComposerManaged\\ComposerScripts::postUpdate",
-            "@maybe-add-symlinks"
+            "@maybe-create-symlinks"
         ],
         "deploy": [
             "terminus deploy cxr-s3q-us.test",
