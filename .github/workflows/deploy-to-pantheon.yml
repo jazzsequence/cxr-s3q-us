@@ -38,6 +38,11 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      - name: Setup Git Config
+        run: |
+          git config --global user.name "${{ env.git_user_name }}"
+          git config --global user.email "${{ env.git_user_email }}"
+
       - name: Install dependencies
         run: |
           composer install --prefer-dist --no-progress
