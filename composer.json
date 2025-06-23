@@ -132,7 +132,7 @@
         "post-install-cmd": "@maybe-create-symlinks",
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
         "install-sage": ["bash ./private/scripts/helpers.sh install_sage"],
-        "maybe-create-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
+        "maybe-add-symlinks": ["bash ./private/scripts/helpers.sh maybe_create_symlinks"],
         "lint": [
             "@lint:php",
             "@lint:phpcs",
@@ -145,7 +145,7 @@
         "test": [],
         "post-update-cmd": [
             "WordPressComposerManaged\\ComposerScripts::postUpdate",
-            "@maybe-create-symlinks"
+            "@maybe-add-symlinks"
         ],
         "deploy": [
             "terminus deploy cxr-s3q-us.test",
