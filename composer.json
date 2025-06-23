@@ -156,15 +156,6 @@
             "git push origin main",
             "@wait"
         ],
-        "update-ocp-drop-in": [
-            "terminus connection:set cxr-s3q-us.dev sftp",
-            "terminus wp -- cxr-s3q-us.dev redis enable --force",
-            "terminus env:commit --message='Updating OCP drop-in'",
-            "@wait",
-            "terminus connection:set cxr-s3q-us.dev git",
-            "git fetch pantheon",
-            "echo 'Cherry pick the latest commit from the pantheon remote to get the latest OCP drop-in'"
-        ],
         "update-deps": [
             "composer update --ignore-platform-reqs",
             "git add composer.*",
