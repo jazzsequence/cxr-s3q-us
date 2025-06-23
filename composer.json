@@ -75,7 +75,6 @@
         "roots/bedrock-disallow-indexing": "*",
         "roots/wordpress": "*",
         "roots/wp-config": "*",
-        "roots/wp-password-bcrypt": "*",
         "vlucas/phpdotenv": "^5.5",
         "wpackagist-plugin/debug-bar": "*",
         "wpackagist-plugin/pantheon-advanced-page-cache": "*",
