@@ -52,7 +52,7 @@ jobs:
         run: composer lint:phpcs 
 
       - name: Push to Pantheon
-        uses: pantheon-systems/push-to-pantheon@0.6.0
+        uses: pantheon-systems/push-to-pantheon@0.6.1
         with:
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
           machine_token: ${{ secrets.TERMINUS_TOKEN }}
