@@ -132,6 +132,9 @@
         "composer-exit-on-patch-failure": true,
         "enable-patching": true,
         "patches": {
+            "freemius/wordpress-sdk": {
+                "Don't autoload Freemius": "private/patches/freemius.patch"
+            }
         }
     },
     "autoload": {
