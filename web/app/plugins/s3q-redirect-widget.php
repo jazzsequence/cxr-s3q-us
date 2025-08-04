@@ -182,11 +182,13 @@ function render_redirect_list_dashboard_widget() {
 		$sticky_query = new \WP_Query( $sticky_query_args );
 
 		if ( $sticky_query->have_posts() ) {
+			echo '<div class="favorited-redirects">';
 			while ( $sticky_query->have_posts() ) {
 				$sticky_query->the_post();
 				render_redirect_item( get_the_ID() );
 			}
 			wp_reset_postdata();
+			echo '</div>';
 		}
 	}
 
@@ -388,9 +390,9 @@ function enqueue_redirect_widget_script() {
 				attachInputListeners();
 
 				// Handle favorite toggle dynamically
-				const container = document.querySelector('.redirect-list-widget, .favorited-redirects');
-				if (container) {
-					container.addEventListener('click', function (event) {
+				const widget = document.getElementById('redirect_list_dashboard_widget');
+				if (widget) {
+					widget.addEventListener('click', function (event) {
 						const target = event.target;
 
 						// Handle favorite toggle

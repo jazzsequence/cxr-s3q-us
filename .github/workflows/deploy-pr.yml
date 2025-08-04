@@ -1,6 +1,6 @@
 name: Deploy to Pantheon
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths-ignore:
@@ -10,7 +10,6 @@ on:
       - 'web/app/object-cache.php'
       - 'private/scripts/*'
       - 'upstream-configuration/**'
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -56,6 +55,7 @@ jobs:
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
           machine_token: ${{ secrets.TERMINUS_TOKEN }}
           site: cxr-s3q-us
+          target_env: pr-${{ github.event.pull_request.number }}
           git_user_name: ${{ env.git_user_name }}
           git_user_email: ${{ env.git_user_email }}
           git_commit_message: "🤖 Commit build assets"

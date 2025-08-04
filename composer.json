@@ -142,8 +142,9 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "@maybe-add-symlinks",
             "composer install --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo"
+            "@maybe-create-symlinks",
+            "@copy-object-cache-drop-in"
         ],
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
         "install-sage": ["bash ./private/scripts/helpers.sh install_sage"],
@@ -171,6 +172,11 @@
         "push": [
             "git push origin main",
             "@wait"
+        ],
+        "copy-object-cache-drop-in": [
+            "cp web/app/plugins/object-cache-pro/stubs/object-cache.php web/app/",
+            "git add web/app/object-cache.php",
+            "git commit -m \"updating object-cache drop-in\" || true"
         ],
         "update-ocp-drop-in": [
             "terminus connection:set cxr-s3q-us.dev sftp",
