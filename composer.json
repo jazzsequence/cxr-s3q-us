@@ -71,7 +71,7 @@
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
         "fair/fair-plugin": "*",
-        "fair/mini-fair-repo": "*",
+        "fair/mini-fair-repo": "dev-main",
         "humanmade/two-factor": "*",
         "oscarotero/env": "^2.1",
         "pantheon-systems/pantheon-hud": "*",
