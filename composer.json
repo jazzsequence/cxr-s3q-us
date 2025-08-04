@@ -142,8 +142,8 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "composer install --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo"
-            "@maybe-create-symlinks",
+            "composer install --no-dev --prefer-dist --working-dir=./web/app/plugins/mini-fair-repo",
+            "@maybe-add-symlinks",
             "@copy-object-cache-drop-in"
         ],
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
