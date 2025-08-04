@@ -133,7 +133,7 @@
         "enable-patching": true,
         "patches": {
             "freemius/wordpress-sdk": {
-                "Don't autoload Freemius": "private/patches/freemius.patch"
+                "Fix Freemius loading issue": "private/patches/freemius-start.patch"
             }
         }
     },
