@@ -31,6 +31,7 @@
   <exclude-pattern>web/app/plugins/pantheon-hud/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/two-factor/*</exclude-pattern>
   <exclude-pattern>web/app/plugins/debug-bar/*</exclude-pattern>
+  <exclude-pattern>web/app/plugins/fair-plugin/*</exclude-pattern>
   <exclude-pattern>web/app/object-cache.php</exclude-pattern>
   <!-- Other project files to ignore -->
   <exclude-pattern>web/private/*</exclude-pattern>
