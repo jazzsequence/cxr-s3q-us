@@ -57,47 +57,12 @@
             "url": "https://objectcache.pro/repo/"
         },
         {
-            "type": "package",
-            "package": {
-                "name": "fair/mini-fair-repo",
-                "version": "0.1.0",
-                "type": "wordpress-plugin",
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/fairpm/mini-fair-repo",
-                    "reference": "8c166de8275046f0c19eb5f675169df0abbf934f"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "fair/fair-plugin",
-                "version": "0.3.0",
-                "type": "wordpress-muplugin",
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/fairpm/fair-plugin",
-                    "reference": "tags/0.3.0"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "afragen/git-updater",
-                "version": "12.16.1",
-                "type": "wordpress-plugin",
-                "dist": {
-                    "type": "zip",
-                    "url": "https://github.com/afragen/git-updater/releases/download/12.16.1/git-updater-12.16.1.zip",
-                    "reference": "tags/12.16.1"
-                }
-            }
-        },
-        {
             "type": "path",
             "url": "upstream-configuration"
+        },
+        {
+            "type": "composer",
+            "url": "https://packages.jazzsequence.com"
         }
     ],
     "require": {
