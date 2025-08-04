@@ -132,9 +132,6 @@
         "composer-exit-on-patch-failure": true,
         "enable-patching": true,
         "patches": {
-            "freemius/wordpress-sdk": {
-                "Defer Freemius SDK start.php execution": "patches/freemius-sdk-defer-start.patch"
-            }
         }
     },
     "autoload": {
