@@ -534,7 +534,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:fairpm/mini-fair-repo.git",
-                "reference": "ef2595f8840e7bae7d45e38242c315ace29f6435"
+                "reference": "43dfd29606d903303583bec4c01776a547e4032f"
             },
             "type": "wordpress-plugin",
             "license": [
