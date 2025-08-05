@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e128e0876cea45b593eff47d42f0cfa8",
+    "content-hash": "764ddc9a817ae06a03c05788770494b3",
     "packages": [
         {
             "name": "afragen/git-updater",
@@ -534,7 +534,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:fairpm/mini-fair-repo.git",
-                "reference": "ef267033cc635adf5a7acfc7c9612b8a942e15cd"
+                "reference": "ef2595f8840e7bae7d45e38242c315ace29f6435"
             },
             "type": "wordpress-plugin",
             "license": [
