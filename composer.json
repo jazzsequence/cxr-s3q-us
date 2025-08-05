@@ -135,13 +135,14 @@
             "freemius/wordpress-sdk": {
                 "Conditionally load Freemius SDK": "private/patches/freemius-conditional-load.patch"
             },
-            "fair/mini-fair-repo": {
-                "Fix syntax error in git-updater provider": "private/patches/mini-fair-repo-syntax.patch"
-            }
+            "fair/mini-fair-repo": {}
         }
     },
     "autoload": {
-        "classmap": ["upstream-configuration/scripts/ComposerScripts.php"]
+        "classmap": [
+            "upstream-configuration/scripts/ComposerScripts.php",
+            "private/lib/mini-fair-repo/class-provider.php"
+        ]
     },
     "scripts": {
         "post-install-cmd": [
