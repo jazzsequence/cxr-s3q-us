@@ -1,0 +1,13 @@
+--- a/start.php
++++ b/start.php
+@@ -6,6 +6,10 @@
+  * @since       1.0.3
+  */
+ 
++if ( ! function_exists( 'get_theme_root' ) ) {
++	return;
++}
++
+ 	if ( ! defined( 'ABSPATH' ) ) {
+ 		return;
+ 	}
