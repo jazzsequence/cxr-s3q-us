@@ -134,8 +134,7 @@
         "patches": {
             "freemius/wordpress-sdk": {
                 "Conditionally load Freemius SDK": "private/patches/freemius-conditional-load.patch"
-            },
-            "fair/mini-fair-repo": {}
+            }
         }
     },
     "autoload": {
