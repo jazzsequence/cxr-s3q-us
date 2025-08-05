@@ -140,8 +140,7 @@
     },
     "autoload": {
         "classmap": [
-            "upstream-configuration/scripts/ComposerScripts.php",
-            "private/lib/mini-fair-repo/class-provider.php"
+            "upstream-configuration/scripts/ComposerScripts.php"
         ]
     },
     "scripts": {
