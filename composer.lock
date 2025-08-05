@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "764ddc9a817ae06a03c05788770494b3",
+    "content-hash": "f3a1ad2fca7f49efb82684dfdcf5d2aa",
     "packages": [
         {
             "name": "afragen/git-updater",
@@ -714,6 +714,38 @@
                 "source": "https://github.com/WordPress/two-factor"
             },
             "time": "2023-09-04T20:35:54+00:00"
+        },
+        {
+            "name": "jazzsequence/horror-ipsum",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jazzsequence/horror-ipsum.git",
+                "reference": "afd614e53f7418181f7c89f94a5e955142fb1e82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jazzsequence/horror-ipsum/zipball/afd614e53f7418181f7c89f94a5e955142fb1e82",
+                "reference": "afd614e53f7418181f7c89f94a5e955142fb1e82",
+                "shasum": ""
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Reynolds",
+                    "email": "chris@jazzsequence.com"
+                }
+            ],
+            "description": "A WordPress Gutenberg plugin that generates a block of horror-themed dummy text.",
+            "support": {
+                "issues": "https://github.com/jazzsequence/horror-ipsum/issues",
+                "source": "https://github.com/jazzsequence/horror-ipsum/tree/1.0.5"
+            },
+            "time": "2024-10-24T18:40:56+00:00"
         },
         {
             "name": "oscarotero/env",

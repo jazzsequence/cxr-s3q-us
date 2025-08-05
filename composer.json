@@ -73,6 +73,7 @@
         "fair/fair-plugin": "*",
         "fair/mini-fair-repo": "dev-main",
         "humanmade/two-factor": "*",
+        "jazzsequence/horror-ipsum": "^1.0",
         "oscarotero/env": "^2.1",
         "pantheon-systems/pantheon-hud": "*",
         "pantheon-systems/pantheon-mu-plugin": "*",
