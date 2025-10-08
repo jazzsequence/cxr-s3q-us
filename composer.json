@@ -70,7 +70,7 @@
         "afragen/git-updater": "^12.16",
         "composer/installers": "^2.2",
         "cweagans/composer-patches": "^1.7",
-        "fair/fair-plugin": "*",
+        "fairpm/fair-plugin": "*",
         "fair/mini-fair-repo": "dev-main",
         "humanmade/two-factor": "*",
         "jazzsequence/horror-ipsum": "^1.0",
