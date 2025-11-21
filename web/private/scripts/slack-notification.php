@@ -202,7 +202,7 @@ function _get_blocks_for_workflow() {
 				"*Cloned to:* {$environment}",
 			]);
 			break;
-	
+
 		default:
 			$description = $_POST['qs_description'] ?? 'No additional details provided.';
 			$blocks[] = _create_text_block("*Description:*\n{$description}");
