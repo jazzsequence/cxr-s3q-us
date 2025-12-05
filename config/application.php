@@ -142,6 +142,11 @@ switch ( $_ENV['PANTHEON_ENVIRONMENT'] ?? 'local' ) {
         Config::define('WP_DEBUG_LOG', false);
         Config::define('WP_DEBUG_DISPLAY', false);
         break;
+	case 'multidev':
+		Config::define('WP_DEBUG', true);
+		Config::define('WP_DEBUG_LOG', true);
+		Config::define('WP_DEBUG_DISPLAY', false);
+		break;
     default: // local or unset
         Config::define('WP_DEBUG', true);
         Config::define('WP_DEBUG_LOG', true);
