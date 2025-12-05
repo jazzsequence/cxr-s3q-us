@@ -161,7 +161,7 @@
         ],
         "copy-object-cache-drop-in": [
             "cp web/app/plugins/object-cache-pro/stubs/object-cache.php web/app/",
-            "git add web/app/object-cache.php",
+            "git add web/app/object-cache.php --author=\"GitHub Actions <actions@github.com>\"",
             "git commit -m \"updating object-cache drop-in\" || true"
         ],
         "update-ocp-drop-in": [
