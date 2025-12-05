@@ -39,7 +39,6 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --prefer-dist --no-progress
-          git add -A
 
       - name: Run PHP CodeSniffer
         run: composer lint:phpcs 
