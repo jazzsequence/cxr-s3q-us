@@ -130,7 +130,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "@maybe-create-symlinks",
+            "@maybe-add-symlinks",
             "@copy-object-cache-drop-in"
         ],
         "pre-update-cmd": ["WordPressComposerManaged\\ComposerScripts::preUpdate"],
