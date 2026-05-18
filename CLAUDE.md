@@ -32,11 +32,13 @@ composer lint:bash        # shellcheck private/scripts/*.sh
 
 composer deploy           # Deploy test + live via Terminus (requires auth)
 composer push             # git push origin main, then wait for dev workflow
-composer update-deps      # composer update, commit composer.*
+composer update-deps      # composer update, commit composer.* (run manually with --ignore-platform-reqs locally)
 composer update-and-deploy # update-deps + push + deploy
 
 composer update-ocp-drop-in  # Regenerate Object Cache Pro drop-in via SFTP
 ```
+
+Local `composer update` requires `--ignore-platform-reqs` — the local environment lacks `ext-redis`, which Object Cache Pro requires, causing dependency resolution to fail without the flag.
 
 There are no PHP unit tests (`"test": []` in `composer.json`). Lint is the quality gate.
 
