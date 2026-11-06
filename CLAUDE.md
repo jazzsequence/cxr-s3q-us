@@ -42,6 +42,18 @@ Local `composer update` requires `--ignore-platform-reqs` — the local environm
 
 There are no PHP unit tests (`"test": []` in `composer.json`). Lint is the quality gate.
 
+## Never Update Core (or Plugins) on Pantheon
+
+Update WordPress core, plugins, and themes through Composer in GitHub only (`composer update-deps`, then `composer push`). Do **not** use the Pantheon dashboard "Update WordPress" button or SFTP mode for this.
+
+**Why:** `web/wp` is gitignored. A Pantheon-side core update commits modified tracked files but silently skips brand-new files, so test/live ended up with a new `wp-includes/plugin.php` requiring `class-wp-filter-sentinel.php` that was never committed. Live fataled with HTTP 500 (2026-11-05/06) while dev kept working because the file lingered untracked in its working tree. GitHub also still pinned the old core, so the next deploy would have reverted the security fix.
+
+**Diagnosing a 500 on Pantheon:** `terminus remote:wp <site>.<env> -- option get home` surfaces the PHP fatal when the site is down. Compare envs with `terminus remote:wp <site>.<env> -- --skip-wordpress eval '...'` (works even when WP can't boot).
+
+**Deploy auth:** CI authenticates with the `TERMINUS_TOKEN` repo secret (a Pantheon machine token — a single 43-char string, no colon). If `deploy-to-pantheon.yml` fails with `Could not log in with the given machine token: Unauthorized`, the token is revoked/expired. Set a new one with `gh secret set TERMINUS_TOKEN --repo jazzsequence/cxr-s3q-us` in a terminal outside Claude. Dependabot merges that only touch `.github/` don't trigger deploys, so a dead token can go unnoticed for months. Note `gh` defaults to the `upstream` remote here, so always pass `--repo jazzsequence/cxr-s3q-us`.
+
+After a core bump, run `terminus remote:wp <site>.<env> -- core update-db` on each env.
+
 ## Directory Layout (Bedrock)
 
 ```
